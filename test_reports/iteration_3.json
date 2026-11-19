@@ -1,0 +1,21 @@
+{
+  "summary": "Frontend-only check of the founder photo fix plus two small fixes. All 5 requested checks passed. Founder photo (848x1264, natural ratio 0.671) renders at ratio 0.671-0.672, so nothing is cropped, on Home and /about at 1920 and 390 widths. Screenshots show the full head and face. Photo, name and 'Meet the founder' all link to https://thenilgirissoftwares.com/ with target=_blank. Opening the case study from the portfolio modal (opened at scrollY 961) lands on /portfolio/optima-health at scrollY 0. On mobile (390px), hero-next sits at left 72px and the chat button at x 312-370, so they no longer overlap. elementFromPoint at the hero-next centre returns hero-next, and clicking it moves to the next slide. No horizontal overflow (scrollWidth 390).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Mobile hero controls (390px)", "issues": ["With 8 slides, the controls wrap to two lines: prev and 6 dots on line 1, then 2 dots and the next arrow on line 2. It works but looks a little unbalanced. Consider hiding the dots on mobile or putting prev and next together.", "While the cookie banner is visible, it can cover hero-next when the button is near the bottom of the viewport. This is temporary and goes away once the banner is dismissed."]},
+      {"screen": "Founder section mobile", "issues": ["The full-width portrait is about 520px tall at 390px width, so it fills most of the first screen of the section. This is optional polish, e.g. a max-width of about 280px centred."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": ["Optional: tidy the mobile hero control layout (dots wrapping)."],
+  "critical_code_review_comments": ["The .founder-photo { aspect-ratio: auto } override works only because it comes after .media-frame in App.css (same specificity). Consider .media-frame.founder-photo to make it robust to reordering."],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped)", "frontend": "100%"},
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Founder photo fix, case-study scroll-to-top and mobile hero-next overlap were all verified in iteration_3. localStorage was cleared before each load. Project cards use data-testid project-card-{id}; the modal CTA is project-case-study-link."
+}

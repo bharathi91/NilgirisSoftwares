@@ -21,6 +21,13 @@ A premium, mobile-first corporate website for The Nilgiris Softwares Private Lim
 - Administration includes users and roles (5 roles enforced on the server, invites, session revoke, protection of the last Super Admin), login history, audit logs, backup and restore, version history with compare and restore, and a publish page with diff, discard and submit-for-approval.
 - Fixed after testing: chat widget crash, blog post route, weak-ETag 304, notification settings now read from the published content, toast position.
 
+## Iteration 2 (2026-11-19)
+- Imported the founder's details from thenilgirissoftwares.com: photo, 8 roles, achievements and education. Founder links (button, name, photo, hero slide) now go to https://thenilgirissoftwares.com.
+- 18 projects now show their real App Store screenshots. GolfApp, Trackyfy and the 4 hospital sites (company projects) use generated covers tagged "Illustrative image". Each project has a case study page at /portfolio/<slug>.
+- The hero carousel now has 10 slides about Ooty and engineering. There is a floating WhatsApp button (on/off in admin settings). Technology chips show tech logos, the "Why choose us" cards have images, and the About section has longer text and a 5-image carousel.
+- Fixed: founder photo cropping (now shown at its natural size), case study pages open at the top, and the next-slide button on mobile is no longer covered.
+- Content updates were applied with /app/scripts/content_update_v2.py and v3.py, then published as new versions.
+
 ## Backlog
 - P1: Verify the founder's details and projects, add photos and screenshots, and confirm the contact details. The original site blocked automated import.
 - P1: Blog schedule timezone (datetime-local is treated as UTC). The All Pages slug input commits only on blur.
