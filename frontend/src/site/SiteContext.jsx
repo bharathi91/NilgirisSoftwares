@@ -49,7 +49,7 @@ export function SiteProvider({ preview = false, loadDraft, children }) {
     if (window.parent !== window) return window.parent.postMessage(msg, window.location.origin);
     if (msg.type === "navigate" && msg.href.startsWith("/")) window.location.assign(`/preview${msg.href === "/" ? "" : msg.href}`);
   };
-  return <SiteCtx.Provider value={{ site: site?.data, version: site?.version, preview, post, selected, mode, setMode, lang, setLang, translating }}>{children}</SiteCtx.Provider>;
+  return <SiteCtx.Provider value={{ site: site?.data, portfolioNav: site?.portfolio_nav, version: site?.version, preview, post, selected, mode, setMode, lang, setLang, translating }}>{children}</SiteCtx.Provider>;
 }
 
 export function resolveTheme(theme, userMode) {

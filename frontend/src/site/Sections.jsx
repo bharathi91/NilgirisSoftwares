@@ -226,7 +226,7 @@ function Projects({ s }) {
         {!!open.features?.length && <ul className="mt-5 space-y-1 list-disc pl-5 muted">{open.features.map((f) => <li key={f}>{f}</li>)}</ul>}
         {!!open.tech?.length && <div className="flex flex-wrap gap-2 mt-5">{open.tech.map((t) => <span key={t} className="chip">{t}</span>)}</div>}
         {!!open.screenshots?.length && <div className="flex gap-3 overflow-x-auto mt-6 snap-x">{open.screenshots.map((u) => <Img key={u} src={u} className="h-64 rounded-xl snap-start" />)}</div>}
-        <div className="flex flex-wrap gap-3 mt-7">{open.slug && <SmartLink href={`/portfolio/${open.slug}`} className="btn-primary" testid="project-case-study-link">{t("Read case study")} <ArrowUpRight size={16} /></SmartLink>}
+        <div className="flex flex-wrap gap-3 mt-7">{open.slug && <SmartLink href={`/projects/${open.slug}`} className="btn-primary" testid="project-case-study-link">{t("Read case study")} <ArrowUpRight size={16} /></SmartLink>}
           {open.link && <SmartLink href={open.link} className="btn-ghost" testid="project-external-link">{t("Visit project")} <ArrowUpRight size={16} /></SmartLink>}</div>
       </motion.div></motion.div>}</AnimatePresence></>);
 }

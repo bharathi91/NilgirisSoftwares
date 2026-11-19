@@ -9,6 +9,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'pf-heading': ['var(--font-heading, "Cabinet Grotesk")', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'pf-body': ['var(--font-body, "Satoshi")', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        'pf-serif-accent': ['"Instrument Serif"', 'ui-serif', 'Georgia', 'serif'],
+        'pf-mono': ['"JetBrains Mono"', 'ui-monospace', 'Menlo', 'monospace'],
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

@@ -1,13 +1,15 @@
 import { lazy, Suspense } from "react";
 import "@/App.css";
 import "@/admin.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SignIn, SignUp } from "@clerk/react";
 import { Toaster } from "@/components/ui/sonner";
 import ClerkAuthProvider from "@/components/auth/ClerkAuthProvider";
 import { PublicSite, PreviewSite } from "@/site/Pages";
 
 const AdminApp = lazy(() => import("@/admin/AdminApp"));
+const PortfolioApp = lazy(() => import("@/portfolio/PortfolioApp"));
+const LegacyWork = lazy(() => import("@/portfolio/PortfolioApp").then((m) => ({ default: m.LegacyWork })));
 
 function AuthPage({ children }) {
   return (
@@ -34,6 +36,10 @@ function App() {
             <Route path="/sign-up/*" element={<AuthPage><SignUp routing="path" path="/sign-up" signInUrl="/admin/login" /></AuthPage>} />
             <Route path="/admin/*" element={<AdminApp />} />
             <Route path="/preview/*" element={<PreviewSite />} />
+            <Route path="/portfolio/*" element={<PortfolioApp />} />
+            <Route path="/work/:id" element={<LegacyWork />} />
+            <Route path="/quick-view" element={<Navigate to="/portfolio/quick-view" replace />} />
+            <Route path="/testimonial/*" element={<Navigate to="/portfolio" replace />} />
             <Route path="*" element={<PublicSite />} />
           </Routes>
         </Suspense>

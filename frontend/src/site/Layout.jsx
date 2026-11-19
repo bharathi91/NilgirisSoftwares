@@ -36,13 +36,15 @@ const Logo = () => {
 };
 
 export function Header() {
-  const { site } = useSite();
+  const { site, portfolioNav } = useSite();
   const nav = site.navigation;
   const [open, setOpen] = useState(false), [scrolled, setScrolled] = useState(false);
   const loc = useLocation();
   useEffect(() => { setOpen(false); }, [loc.pathname]);
   useEffect(() => { const f = () => setScrolled(window.scrollY > 20); f(); window.addEventListener("scroll", f, { passive: true }); return () => window.removeEventListener("scroll", f); }, []);
   const items = nav.items.filter((i) => i.visible !== false);
+  if (portfolioNav?.visible && !items.some((i) => i.href === "/portfolio")) items.push({ id: "my-portfolio", label: portfolioNav.label || "My Portfolio", href: "/portfolio", children: [] });
+  const isActive = (h) => h === "/" ? loc.pathname === "/" : loc.pathname === h || loc.pathname.startsWith(`${h}/`);
   return (
     <header className={`site-header ${nav.sticky ? "sticky-h" : ""} ${scrolled ? "scrolled" : ""}`} data-testid="site-header">
       <div className={`wrap flex items-center gap-6 h-[72px] ${nav.layout === "center" ? "justify-between lg:justify-center" : "justify-between"}`} style={{ maxWidth: "var(--container)" }}>
@@ -50,7 +52,7 @@ export function Header() {
         <nav className="hidden lg:flex items-center gap-1" aria-label="Main">{items.map((it) => {
           const kids = (it.children || []).filter((c) => c.visible !== false);
           return <div key={it.id} className="relative group">
-            <SmartLink href={it.href} className="nav-link" testid={`nav-${it.label.toLowerCase().replace(/\W+/g, "-")}`}>{it.label}{kids.length > 0 && <ChevronDown size={14} />}</SmartLink>
+            <SmartLink href={it.href} className={`nav-link ${isActive(it.href) ? "active" : ""}`} aria-current={isActive(it.href) ? "page" : undefined} testid={`nav-${it.label.toLowerCase().replace(/\W+/g, "-")}`}>{it.label}{kids.length > 0 && <ChevronDown size={14} />}</SmartLink>
             {kids.length > 0 && <div className="nav-drop">{kids.map((c) => <SmartLink key={c.id} href={c.href} className="nav-drop-link" testid={`nav-sub-${c.label.toLowerCase().replace(/\W+/g, "-")}`}>{c.label}</SmartLink>)}</div>}
           </div>; })}</nav>
         <div className="flex items-center gap-2">
@@ -61,7 +63,7 @@ export function Header() {
         </div>
       </div>
       {open && <nav className="mobile-nav lg:hidden" data-testid="mobile-nav">{items.map((it) => <div key={it.id}>
-        <SmartLink href={it.href} className="mobile-link">{it.label}</SmartLink>
+        <SmartLink href={it.href} className={`mobile-link ${isActive(it.href) ? "active" : ""}`} testid={`mobile-nav-${it.label.toLowerCase().replace(/\W+/g, "-")}`}>{it.label}</SmartLink>
         {(it.children || []).filter((c) => c.visible !== false).map((c) => <SmartLink key={c.id} href={c.href} className="mobile-link sub">{c.label}</SmartLink>)}</div>)}
         {nav.ctaLabel && <SmartLink href={nav.ctaHref} className="btn-primary mt-4 justify-center">{nav.ctaLabel}</SmartLink>}</nav>}
     </header>);
