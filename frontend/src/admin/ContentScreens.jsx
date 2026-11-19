@@ -79,15 +79,48 @@ function Seo() {
     </Panel></div>;
 }
 
+function Submissions() {
+  const { api, can, reload } = useAdmin();
+  const [items, setItems] = useState([]);
+  const load = () => api.get("/admin/testimonial-submissions").then((r) => setItems(r.data)).catch((e) => toast.error(errMsg(e)));
+  useEffect(() => { load(); }, []); // eslint-disable-line
+  const link = `${window.location.origin}/share-feedback`;
+  const act = async (fn, msg) => { try { await fn(); toast.success(msg); load(); } catch (e) { toast.error(errMsg(e)); } };
+  return <Panel title="Collect testimonials" desc="Send this link to your hospital clients. Submissions arrive here; approved ones are added to the list below as verified (then Publish)." testid="testimonial-submissions">
+    <div className="flex gap-2 mb-4"><input readOnly value={link} className="admin-select" data-testid="feedback-link" />
+      <Button size="sm" variant="outline" onClick={() => { navigator.clipboard.writeText(link); toast.success("Link copied"); }} data-testid="copy-feedback-link">Copy link</Button></div>
+    <div className="space-y-2">{items.map((t) => <div key={t.id} className="rounded-xl border p-3 text-sm" data-testid={`submission-${t.id}`}>
+      <p className="italic">“{t.quote}”</p><p className="text-xs text-muted-foreground mt-1">{t.name}{t.role ? `, ${t.role}` : ""}{t.company ? ` · ${t.company}` : ""} · {t.email} · {new Date(t.created_at).toLocaleDateString()}</p>
+      {t.status === "pending" && can("content.write") ? <div className="flex gap-2 mt-2"><Button size="sm" onClick={() => act(async () => { await api.post(`/admin/testimonial-submissions/${t.id}/approve`); await reload(); }, "Approved and added — publish to show it")} data-testid={`approve-${t.id}`}>Approve</Button>
+        <Button size="sm" variant="ghost" className="text-red-400" onClick={() => act(() => api.delete(`/admin/testimonial-submissions/${t.id}`), "Rejected")} data-testid={`reject-${t.id}`}>Reject</Button></div>
+        : <span className="text-xs uppercase tracking-wider text-primary">{t.status}</span>}</div>)}
+      {!items.length && <p className="text-sm text-muted-foreground">No submissions yet.</p>}</div></Panel>;
+}
+
+function SiteLanguages() {
+  const { api, draft, setPath, can } = useAdmin();
+  const [st, setSt] = useState([]);
+  const load = () => api.get("/admin/translations/status").then((r) => setSt(r.data));
+  useEffect(() => { load(); const i = setInterval(load, 8000); return () => clearInterval(i); }, []); // eslint-disable-line
+  const langs = draft.data.settings.siteLanguages || ["en", "ta"];
+  return <Panel title="Website languages" desc="Visitors switch the whole website with the language button in the header. Content is translated automatically by AI each time you publish." testid="site-languages">
+    <div className="flex flex-wrap gap-2">{Object.entries(LANGS).map(([k, v]) => <label key={k} className={`rounded-xl border px-3 py-2 text-sm cursor-pointer ${langs.includes(k) ? "border-primary bg-primary/10" : ""}`}>
+      <input type="checkbox" className="mr-2 accent-primary" disabled={k === "en"} checked={langs.includes(k)} onChange={() => setPath("settings.siteLanguages", langs.includes(k) ? langs.filter((x) => x !== k) : [...langs, k])} data-testid={`site-lang-${k}`} />{v}</label>)}</div>
+    <div className="mt-4 space-y-2">{st.map((x) => <div key={x.lang} className="flex items-center gap-3 text-sm" data-testid={`tr-status-${x.lang}`}>
+      <b>{LANGS[x.lang] || x.lang}</b><span className="text-muted-foreground">{x.running ? "Translating…" : x.up_to_date ? `Up to date · ${x.coverage}% translated` : "Out of date"}</span>
+      {can("publish") && <Button size="sm" variant="outline" onClick={async () => { await api.post(`/admin/translations/${x.lang}/regenerate`); toast.success("Translation started"); setTimeout(load, 1500); }} data-testid={`tr-regen-${x.lang}`}>Translate now</Button>}</div>)}</div>
+  </Panel>;
+}
+
 function Languages() {
   const { draft, setPath } = useAdmin();
   const ai = draft.data.ai;
   const toggle = (k) => setPath("ai.languages", ai.languages.includes(k) ? ai.languages.filter((x) => x !== k) : [...ai.languages, k]);
-  return <Panel title="Assistant languages" desc="Visitors can pick any enabled language; the assistant replies in it.">
+  return <div className="space-y-5"><SiteLanguages /><Panel title="Assistant languages" desc="Visitors can pick any enabled language; the assistant replies in it.">
     <div className="grid grid-cols-2 md:grid-cols-5 gap-2">{Object.entries(LANGS).map(([k, v]) => <label key={k} className={`rounded-xl border p-3 text-sm cursor-pointer ${ai.languages.includes(k) ? "border-primary bg-primary/10" : ""}`}>
       <input type="checkbox" className="mr-2 accent-primary" checked={ai.languages.includes(k)} onChange={() => toggle(k)} data-testid={`lang-${k}`} />{v}</label>)}</div>
     <div className="mt-5 max-w-xs"><Field f={L("defaultLanguage", "Default language", "select", { options: ai.languages.map((k) => ({ value: k, label: LANGS[k] || k })) })} value={ai.defaultLanguage} onChange={(v) => setPath("ai.defaultLanguage", v)} testid="ai-default-language" /></div>
-  </Panel>;
+  </Panel></div>;
 }
 
 function Conversations() {
@@ -136,8 +169,8 @@ const SCREENS = {
       L("results", "Case study: results (only verified numbers)", "list", { itemLabel: "label", fields: [L("value", "Value (e.g. 40%)"), L("label", "Label")] }), L("story", "Case study: full story", "rich")]} />,
   technologies: () => <BindList path="technologies" title="Technologies" itemLabel="name" summary={(t) => <>{t.name} <span className="text-xs text-muted-foreground">· {t.category}</span></>}
     fields={[L("name", "Name"), L("image", "Logo image (SVG/PNG URL or upload)", "image"), L("category", "Category", "select", { options: ["Frontend", "Backend", "iOS", "Android", "Databases", "DevOps", "AI", "Cloud", "Security"] })]} newItem={() => ({ name: "New technology", category: "Frontend" })} />,
-  testimonials: () => <BindList path="testimonials" title="Testimonials" desc="Only add testimonials you can verify. Unverified ones stay hidden." itemLabel="name"
-    fields={[L("name", "Name"), L("role", "Role"), L("company", "Company"), L("quote", "Quote", "textarea"), L("verified", "Verified", "switch")]} newItem={() => ({ name: "", role: "", company: "", quote: "", verified: false })} />,
+  testimonials: () => <div className="space-y-5"><Submissions /><BindList path="testimonials" title="Testimonials" desc="Only add testimonials you can verify. Unverified ones stay hidden." itemLabel="name"
+    fields={[L("name", "Name"), L("role", "Role"), L("company", "Company"), L("quote", "Quote", "textarea"), L("verified", "Verified", "switch")]} newItem={() => ({ name: "", role: "", company: "", quote: "", verified: false })} /></div>,
   faqs: () => <BindList path="faqs" title="FAQs" itemLabel="q" fields={[L("q", "Question"), L("a", "Answer", "textarea")]} newItem={() => ({ q: "New question", a: "" })} />,
   components: () => <BindList path="components" title="Reusable components" desc="Save any section from the Page Builder with “Reuse”, then insert it on any page via Add section." itemLabel="name" fields={[L("name", "Name")]} newItem={() => ({ name: "Call to action", section: { type: "cta", visible: true, props: { title: "Ready to start?", subtitle: "", buttons: [{ label: "Contact us", href: "/contact", variant: "primary" }] }, style: {} } })} />,
   animations: () => <Bind path="animations" title="Animations" desc="Applies site-wide; each section's entrance style is set in the Page Builder. Visitors with reduced-motion preferences see no animation." fields={[L("enabled", "Enable animations", "switch"), L("duration", "Duration (seconds)", "number"), L("distance", "Movement distance (px)", "number"), L("stagger", "Stagger delay (seconds)", "number")]} />,

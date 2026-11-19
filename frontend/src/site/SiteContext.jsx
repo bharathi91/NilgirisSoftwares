@@ -7,9 +7,12 @@ export const useSite = () => useContext(SiteCtx);
 const CACHE_KEY = "nsw_site_v1";
 
 export function SiteProvider({ preview = false, loadDraft, children }) {
+  const [lang, setLangState] = useState(() => (preview ? "en" : localStorage.getItem("nsw_lang") || "en"));
+  const [translating, setTranslating] = useState(false);
+  const setLang = (l) => { setLangState(l); try { localStorage.setItem("nsw_lang", l); } catch {} };
   const [site, setSite] = useState(() => {
     if (preview) return null;
-    try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch { return null; }
+    try { return JSON.parse(localStorage.getItem(`${CACHE_KEY}_${localStorage.getItem("nsw_lang") || "en"}`)); } catch { return null; }
   });
   const [selected, setSelected] = useState(null);
 
@@ -26,11 +29,18 @@ export function SiteProvider({ preview = false, loadDraft, children }) {
       else loadDraft?.().then((d) => setSite({ version: "draft", data: d })).catch(() => {});
       return () => window.removeEventListener("message", onMsg);
     }
-    axios.get(`${API}/public/site`).then((r) => {
+    let stop = false, tries = 0, timer;
+    const load = () => axios.get(`${API}/public/site`, { params: lang !== "en" ? { lang } : {} }).then((r) => {
+      if (stop) return;
       setSite(r.data);
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify(r.data)); } catch {}
+      setTranslating(!!r.data.translating);
+      if (r.data.translating && tries++ < 15) timer = setTimeout(load, 5000);
+      else try { localStorage.setItem(`${CACHE_KEY}_${lang}`, JSON.stringify(r.data)); } catch {}
     }).catch(() => {});
-  }, [preview, loadDraft]);
+    load();
+    document.documentElement.lang = lang;
+    return () => { stop = true; clearTimeout(timer); };
+  }, [preview, loadDraft, lang]);
 
   const [mode, setModeState] = useState(() => localStorage.getItem("nsw_mode") || "");
   const setMode = (m) => { setModeState(m); try { localStorage.setItem("nsw_mode", m); } catch {} };
@@ -39,7 +49,7 @@ export function SiteProvider({ preview = false, loadDraft, children }) {
     if (window.parent !== window) return window.parent.postMessage(msg, window.location.origin);
     if (msg.type === "navigate" && msg.href.startsWith("/")) window.location.assign(`/preview${msg.href === "/" ? "" : msg.href}`);
   };
-  return <SiteCtx.Provider value={{ site: site?.data, version: site?.version, preview, post, selected, mode, setMode }}>{children}</SiteCtx.Provider>;
+  return <SiteCtx.Provider value={{ site: site?.data, version: site?.version, preview, post, selected, mode, setMode, lang, setLang, translating }}>{children}</SiteCtx.Provider>;
 }
 
 export function resolveTheme(theme, userMode) {

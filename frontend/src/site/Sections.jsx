@@ -8,6 +8,7 @@ import { useSite } from "./SiteContext";
 import { Icon } from "../lib/icons";
 import { API, mediaUrl, srcSet } from "../lib/api";
 import ContactForm from "./ContactForm";
+import { useT } from "../lib/i18n";
 
 export function SmartLink({ href = "/", className, children, testid, ...rest }) {
   const { preview, post } = useSite();
@@ -153,6 +154,7 @@ const RichText = ({ s }) => <div className="prose-site" dangerouslySetInnerHTML=
 const Grid = ({ children, testid }) => <div className="grid-cols-var mt-12" data-testid={testid}>{children}</div>;
 
 function ServicesGrid({ s }) {
+  const t = useT();
   const { site } = useSite();
   let items = site.services.filter((x) => x.visible !== false);
   if (s.props.limit) items = items.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0)).slice(0, s.props.limit);
@@ -160,7 +162,7 @@ function ServicesGrid({ s }) {
     <SmartLink key={x.id} href={x.href || "/contact"} className="card card-hover group text-left" testid={`service-card-${x.slug}`}>
       <span className="icon-chip"><Icon name={x.icon} size={22} /></span>
       <h3 className="card-title mt-6">{x.title}</h3><p className="muted mt-3">{x.summary}</p>
-      <span className="link-arrow mt-6">Learn more <ArrowUpRight size={16} /></span>
+      <span className="link-arrow mt-6">{t("Learn more")} <ArrowUpRight size={16} /></span>
     </SmartLink>))}</Grid></>);
 }
 
@@ -174,6 +176,7 @@ const Stats = ({ s }) => (<><Head s={s} /><Grid>{(s.props.items || []).map((x, i
   <div key={i} className="stat"><div className="stat-v">{x.value}</div><div className="muted mt-2">{x.label}</div></div>))}</Grid></>);
 
 function TechStack({ s }) {
+  const t = useT();
   const { site } = useSite();
   const only = (s.props.categories || []).filter(Boolean);
   const cats = [...new Set(site.technologies.map((t) => t.category))].filter((c) => !only.length || only.includes(c));
@@ -181,7 +184,7 @@ function TechStack({ s }) {
   const list = site.technologies.filter((t) => cats.includes(t.category) && (cat === "All" || t.category === cat));
   return (<><Head s={s} />
     <div className="flex flex-wrap gap-2 mt-10" role="tablist">{["All", ...cats].map((c) => (
-      <button key={c} role="tab" aria-selected={cat === c} onClick={() => setCat(c)} className={`pill ${cat === c ? "on" : ""}`} data-testid={`tech-tab-${c.toLowerCase()}`}>{c}</button>))}</div>
+      <button key={c} role="tab" aria-selected={cat === c} onClick={() => setCat(c)} className={`pill ${cat === c ? "on" : ""}`} data-testid={`tech-tab-${c.toLowerCase()}`}>{c === "All" ? t("All") : c}</button>))}</div>
     <motion.div layout className="flex flex-wrap gap-3 mt-8">{list.map((t) => (
       <motion.span layout key={t.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="chip tech-chip" data-testid={`tech-chip-${t.name.toLowerCase().replace(/\W+/g, "-")}`}>
         {t.image && <img src={mediaUrl(t.image)} alt="" width="22" height="22" loading="lazy" className="tech-logo" onError={(e) => { e.currentTarget.style.display = "none"; }} />}{t.name}<small>{t.category}</small></motion.span>))}</motion.div></>);
@@ -190,6 +193,7 @@ function TechStack({ s }) {
 export const CLASS_LABEL = { company: "Company project", founder_experience: "Founder's previous professional experience", personal: "Personal project", demo: "Demonstration project" };
 
 function Projects({ s }) {
+  const t = useT();
   const { site } = useSite();
   const [q, setQ] = useState(""), [cat, setCat] = useState(""), [cls, setCls] = useState(""), [open, setOpen] = useState(null);
   let items = site.projects.filter((p) => p.visible !== false);
@@ -199,31 +203,31 @@ function Projects({ s }) {
     (!q || `${p.name} ${p.description} ${(p.tech || []).join(" ")}`.toLowerCase().includes(q.toLowerCase())));
   return (<><Head s={s} />
     {s.props.filterable && <div className="flex flex-col md:flex-row gap-3 mt-10">
-      <label className="field-wrap flex-1"><Search size={16} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search projects or technologies" data-testid="portfolio-search" /></label>
-      <select value={cat} onChange={(e) => setCat(e.target.value)} className="select-site" data-testid="portfolio-category-filter"><option value="">All categories</option>{cats.map((c) => <option key={c}>{c}</option>)}</select>
-      <select value={cls} onChange={(e) => setCls(e.target.value)} className="select-site" data-testid="portfolio-type-filter"><option value="">All types</option>{Object.entries(CLASS_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select>
+      <label className="field-wrap flex-1"><Search size={16} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("Search projects or technologies")} data-testid="portfolio-search" /></label>
+      <select value={cat} onChange={(e) => setCat(e.target.value)} className="select-site" data-testid="portfolio-category-filter"><option value="">{t("All categories")}</option>{cats.map((c) => <option key={c}>{c}</option>)}</select>
+      <select value={cls} onChange={(e) => setCls(e.target.value)} className="select-site" data-testid="portfolio-type-filter"><option value="">{t("All types")}</option>{Object.entries(CLASS_LABEL).map(([k, v]) => <option key={k} value={k}>{t(v)}</option>)}</select>
     </div>}
     <Grid testid="projects-grid">{shown.map((p) => (
       <button key={p.id} onClick={() => setOpen(p)} className="card card-hover text-left p-0 overflow-hidden" data-testid={`project-card-${p.id}`}>
-        <div className="proj-thumb relative">{p.cover || p.screenshots?.[0] ? <Img src={p.cover || p.screenshots[0]} alt={p.name} className="w-full h-full object-cover" /> : <span className="proj-initial">{p.name[0]}</span>}
-          {p.coverIllustrative && <span className="illus-tag">Illustrative image</span>}</div>
-        <div className="p-6"><span className={`badge cls-${p.classification}`}>{CLASS_LABEL[p.classification]}</span>
+        <div className="proj-thumb relative">{p.cover || p.screenshots?.[0] ? <><span className="thumb-blur" style={{ backgroundImage: `url(${mediaUrl(p.cover || p.screenshots[0], 480)})` }} /><Img src={p.cover || p.screenshots[0]} alt={p.name} className="relative w-full h-full object-contain" /></> : <span className="proj-initial">{p.name[0]}</span>}
+          {p.coverIllustrative && <span className="illus-tag">{t("Illustrative image")}</span>}</div>
+        <div className="p-6"><span className={`badge cls-${p.classification}`}>{t(CLASS_LABEL[p.classification])}</span>
           <h3 className="card-title mt-4">{p.name}</h3><p className="muted text-sm mt-1">{p.category} · {p.platform}</p>
           <p className="muted mt-3 line-clamp-2">{p.description}</p></div>
       </button>))}
-      {!shown.length && <p className="muted">No projects match.</p>}</Grid>
+      {!shown.length && <p className="muted">{t("No projects match.")}</p>}</Grid>
     <AnimatePresence>{open && <motion.div className="modal-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(null)}>
       <motion.div className="modal-card" initial={{ y: 30 }} animate={{ y: 0 }} onClick={(e) => e.stopPropagation()} data-testid="project-modal">
         <button className="icon-btn absolute right-4 top-4" onClick={() => setOpen(null)} aria-label="Close" data-testid="project-modal-close"><X size={18} /></button>
-        <span className={`badge cls-${open.classification}`}>{CLASS_LABEL[open.classification]}</span>
+        <span className={`badge cls-${open.classification}`}>{t(CLASS_LABEL[open.classification])}</span>
         <h3 className="h-title mt-4" style={{ "--title-size": "34px" }}>{open.name}</h3>
         <p className="muted mt-1">{open.category} · {open.platform}</p><p className="body-text mt-5">{open.description}</p>
-        {open.contribution && <><h4 className="card-title mt-6">Contribution</h4><p className="muted mt-2">{open.contribution}</p></>}
+        {open.contribution && <><h4 className="card-title mt-6">{t("Contribution")}</h4><p className="muted mt-2">{open.contribution}</p></>}
         {!!open.features?.length && <ul className="mt-5 space-y-1 list-disc pl-5 muted">{open.features.map((f) => <li key={f}>{f}</li>)}</ul>}
         {!!open.tech?.length && <div className="flex flex-wrap gap-2 mt-5">{open.tech.map((t) => <span key={t} className="chip">{t}</span>)}</div>}
         {!!open.screenshots?.length && <div className="flex gap-3 overflow-x-auto mt-6 snap-x">{open.screenshots.map((u) => <Img key={u} src={u} className="h-64 rounded-xl snap-start" />)}</div>}
-        <div className="flex flex-wrap gap-3 mt-7">{open.slug && <SmartLink href={`/portfolio/${open.slug}`} className="btn-primary" testid="project-case-study-link">Read case study <ArrowUpRight size={16} /></SmartLink>}
-          {open.link && <SmartLink href={open.link} className="btn-ghost" testid="project-external-link">Visit project <ArrowUpRight size={16} /></SmartLink>}</div>
+        <div className="flex flex-wrap gap-3 mt-7">{open.slug && <SmartLink href={`/portfolio/${open.slug}`} className="btn-primary" testid="project-case-study-link">{t("Read case study")} <ArrowUpRight size={16} /></SmartLink>}
+          {open.link && <SmartLink href={open.link} className="btn-ghost" testid="project-external-link">{t("Visit project")} <ArrowUpRight size={16} /></SmartLink>}</div>
       </motion.div></motion.div>}</AnimatePresence></>);
 }
 
@@ -231,6 +235,7 @@ const Process = ({ s }) => (<><Head s={s} /><div className="grid-cols-var mt-12"
   <Reveal key={i} i={i} anim="fade-up"><div className="step"><span className="step-n">{String(i + 1).padStart(2, "0")}</span><h3 className="card-title mt-4">{x.title}</h3><p className="muted mt-2">{x.text}</p></div></Reveal>))}</div></>);
 
 function Founder({ s }) {
+  const t = useT();
   const { site } = useSite();
   const f = site.founder;
   const go = s.props.buttonHref || f.links?.portfolio;
@@ -240,12 +245,12 @@ function Founder({ s }) {
       <div><SmartLink href={go || "/about"} className="card-title text-2xl hover:text-[var(--c-accent)]" testid="founder-name">{f.name}</SmartLink><p className="accent mt-1">{f.title}</p>
         <p className="body-text mt-5">{f.bio}</p>
         <div className="flex flex-wrap gap-2 mt-6">{(f.expertise || []).map((x) => <span key={x} className="chip">{x}</span>)}</div>
-        {s.props.showFull && !!f.domains?.length && <p className="muted mt-6">Industry experience: {f.domains.join(" · ")}</p>}
+        {s.props.showFull && !!f.domains?.length && <p className="muted mt-6">{t("Industry experience")}: {f.domains.join(" · ")}</p>}
         {s.props.showFull && !!f.experience?.length && <div className="mt-8 space-y-5 border-l pl-6" style={{ borderColor: "var(--c-border)" }}>{f.experience.map((x, i) => (
           <div key={i}><p className="card-title">{x.role} · <span className="muted">{x.company}</span></p><p className="text-sm accent">{x.period}</p><p className="muted mt-1">{x.summary}</p></div>))}</div>}
         {s.props.showFull && !!f.achievements?.length && <div className="grid sm:grid-cols-2 gap-4 mt-8">{f.achievements.map((a, i) => (
           <div key={i} className="card !p-5"><div className="stat-v !text-4xl">{a.value}</div><p className="muted text-sm mt-1">{a.label}</p></div>))}</div>}
-        {s.props.showFull && f.education && <p className="muted mt-6">Education: {f.education}</p>}
+        {s.props.showFull && f.education && <p className="muted mt-6">{t("Education")}: {f.education}</p>}
         <div className="flex flex-wrap items-center gap-3 mt-7">
           {go && <SmartLink href={go} className="btn-primary" testid="founder-portfolio-link">{s.props.buttonLabel || "Meet the founder"} <ArrowUpRight size={16} /></SmartLink>}
           {f.links?.linkedin && <SmartLink href={f.links.linkedin} className="icon-btn" testid="founder-linkedin"><Linkedin size={18} /></SmartLink>}
@@ -302,6 +307,7 @@ const Cta = ({ s }) => (<div className="cta-box"><E sid={s.id} field="title" val
   <E sid={s.id} field="subtitle" value={s.props.subtitle} as="p" className="lead mt-4 max-w-2xl" /><BTNS buttons={s.props.buttons} /></div>);
 
 function BlogList({ s }) {
+  const t = useT();
   const [q, setQ] = useState(""), [cat, setCat] = useState(""), [page, setPage] = useState(1), [res, setRes] = useState(null);
   useEffect(() => {
     const t = setTimeout(() => axios.get(`${API}/public/blog`, { params: { q, category: cat, page, size: s.props.limit || 9 } }).then((r) => setRes(r.data)).catch(() => setRes({ items: [], pages: 1, categories: [] })), 250);
@@ -309,14 +315,14 @@ function BlogList({ s }) {
   }, [q, cat, page, s.props.limit]);
   return (<><Head s={s} />
     {s.props.showSearch && <div className="flex flex-col md:flex-row gap-3 mt-4">
-      <label className="field-wrap flex-1"><Search size={16} /><input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search articles" data-testid="blog-search" /></label>
+      <label className="field-wrap flex-1"><Search size={16} /><input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder={t("Search articles")} data-testid="blog-search" /></label>
       <select className="select-site" value={cat} onChange={(e) => { setCat(e.target.value); setPage(1); }} data-testid="blog-category-filter"><option value="">All categories</option>{(res?.categories || []).map((c) => <option key={c}>{c}</option>)}</select></div>}
     <div className="grid-cols-var mt-10" style={{ "--cols": "var(--blog-cols, 3)" }}>{(res?.items || []).map((p) => (
       <SmartLink key={p.id} href={`/blog/${p.slug}`} className="card card-hover p-0 overflow-hidden text-left" testid={`blog-card-${p.slug}`}>
         <div className="proj-thumb">{p.cover ? <Img src={p.cover} className="w-full h-full object-cover" /> : <span className="proj-initial">{p.title[0]}</span>}</div>
         <div className="p-6">{p.featured && <span className="badge cls-company mr-2">Featured</span>}<span className="muted text-sm">{p.category}</span>
           <h3 className="card-title mt-3">{p.title}</h3><p className="muted mt-2 line-clamp-2">{p.excerpt}</p></div></SmartLink>))}</div>
-    {res && !res.items.length && <p className="muted mt-6" data-testid="blog-empty">No articles yet.</p>}
+    {res && !res.items.length && <p className="muted mt-6" data-testid="blog-empty">{t("No articles yet.")}</p>}
     {res?.pages > 1 && <div className="flex gap-2 mt-10">{Array.from({ length: res.pages }, (_, k) => (
       <button key={k} className={`pill ${page === k + 1 ? "on" : ""}`} onClick={() => setPage(k + 1)} data-testid={`blog-page-${k + 1}`}>{k + 1}</button>))}</div>}</>);
 }

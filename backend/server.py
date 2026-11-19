@@ -59,6 +59,8 @@ INDEXES = {
     "analytics": [IndexModel([("day", ASCENDING)], name="day"), IndexModel([("at", DESCENDING)], name="at")],
     "chat_sessions": [IndexModel([("id", ASCENDING)], name="id", unique=True), IndexModel([("updated_at", DESCENDING)], name="upd")],
     "notifications": [IndexModel([("at", DESCENDING)], name="at")],
+    "translations": [IndexModel([("lang", ASCENDING), ("h", ASCENDING)], name="lang_h", unique=True)],
+    "testimonial_submissions": [IndexModel([("id", ASCENDING)], name="id", unique=True)],
     "email_templates": [IndexModel([("id", ASCENDING)], name="id", unique=True)],
 }
 
@@ -206,7 +208,7 @@ async def ensure_seed():
         await db.email_templates.insert_many([{**t, "id": nid(), "created_at": iso()} for t in DEFAULT_TEMPLATES])
 
 
-PRIVATE_KEYS = [("settings", "notifications"), ("settings", "email"), ("ai", "knowledge")]
+PRIVATE_KEYS = [("settings", "_none"), ("settings", "notifications"), ("settings", "email"), ("ai", "knowledge")]
 
 
 def public_view(data: dict) -> dict:
@@ -219,9 +221,90 @@ def public_view(data: dict) -> dict:
     return d
 
 
-@api.get("/public/site")
-async def public_site(request: Request):
+TR_KEYS = {"title", "subtitle", "eyebrow", "body", "text", "label", "ctaLabel", "cta2Label", "summary", "description", "q", "a", "quote", "intro",
+           "vision", "mission", "philosophy", "tagline", "headline", "about", "copyright", "greeting", "message", "offlineMessage", "content", "caption",
+           "challenge", "solution", "contribution", "features", "domains", "category", "bio", "education", "role", "buttonLabel", "ogTitle", "ogDescription",
+           "privacyPolicy", "terms"}
+TR_SKIP = {"technologies", "redirects", "seo", "theme", "components"}
+_tr_running: set = set()
+
+
+def _collect(o, out, key=None):
+    if isinstance(o, dict):
+        for k, v in o.items():
+            if k not in TR_SKIP:
+                _collect(v, out, k)
+    elif isinstance(o, list):
+        for v in o:
+            _collect(v, out, key)
+    elif isinstance(o, str) and key in TR_KEYS and re.search(r"[A-Za-z]{2}", o) and not o.startswith(("http", "/")):
+        out.add(o)
+
+
+def _apply_tr(o, m, key=None):
+    if isinstance(o, dict):
+        return {k: (v if k in TR_SKIP else _apply_tr(v, m, k)) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_apply_tr(v, m, key) for v in o]
+    if isinstance(o, str) and key in TR_KEYS:
+        return m.get(o, o)
+    return o
+
+
+async def translate_site(lang: str):
     pub = await get_cms("published")
+    vid = pub["version_id"]
+    if (lang, vid) in _tr_running:
+        return
+    _tr_running.add((lang, vid))
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        data = public_view(pub["data"])
+        strings = set()
+        _collect(data, strings)
+        hashes = {hashlib.sha1(x.encode()).hexdigest(): x for x in strings}
+        known = {d["h"]: d["text"] async for d in db.translations.find({"lang": lang, "h": {"$in": list(hashes)}}, {"_id": 0})}
+        todo = [x for h, x in hashes.items() if h not in known]
+        for i in range(0, len(todo), 40):
+            batch = todo[i:i + 40]
+            llm = LlmChat(api_key=os.environ["EMERGENT_LLM_KEY"], session_id=f"tr-{nid()}", system_message=(
+                f"You translate website copy for a software company into {LANG_NAMES.get(lang, lang)}. Return ONLY a JSON array of strings, same length and order as the input. "
+                "Keep brand names, product names, technology names, numbers, emoji and placeholders like {year} unchanged. Natural, professional tone.")).with_model("openai", "gpt-6-luna")
+            try:
+                msg = UserMessage(text=json.dumps(batch, ensure_ascii=False))
+                raw = await asyncio.to_thread(lambda: asyncio.run(llm.send_message(msg)))
+                out = json.loads(raw[raw.index("["): raw.rindex("]") + 1])
+                if len(out) != len(batch):
+                    continue
+            except Exception as e:
+                logger.warning(f"translation batch failed: {e}")
+                continue
+            for src, dst in zip(batch, out):
+                h = hashlib.sha1(src.encode()).hexdigest()
+                await db.translations.update_one({"lang": lang, "h": h}, {"$set": {"lang": lang, "h": h, "text": str(dst), "src": src}}, upsert=True)
+                known[h] = str(dst)
+        m = {x: known[h] for h, x in hashes.items() if h in known}
+        await db.cms.update_one({"key": f"tr:{lang}"}, {"$set": {"key": f"tr:{lang}", "version_id": vid, "data": _apply_tr(data, m),
+                                                                 "coverage": round(len(m) / max(1, len(hashes)) * 100), "at": iso()}}, upsert=True)
+    finally:
+        _tr_running.discard((lang, vid))
+
+
+@api.get("/public/site")
+async def public_site(request: Request, background: BackgroundTasks, lang: str = ""):
+    pub = await get_cms("published")
+    langs = pub["data"]["settings"].get("siteLanguages", ["en", "ta"])
+    if lang and lang != "en" and lang in langs:
+        tr = await get_cms(f"tr:{lang}")
+        if tr and tr["version_id"] == pub["version_id"]:
+            etag = f'"{pub["version_id"]}-{lang}"'
+            headers = {"ETag": etag, "Cache-Control": "public, max-age=30, must-revalidate"}
+            if etag_match(request, etag):
+                return Response(status_code=304, headers=headers)
+            return Response(json.dumps({"version": pub["version_id"], "lang": lang, "data": tr["data"]}), media_type="application/json", headers=headers)
+        background.add_task(translate_site, lang)
+        return Response(json.dumps({"version": pub["version_id"], "lang": "en", "translating": True, "data": public_view(pub["data"])}),
+                        media_type="application/json", headers={"Cache-Control": "no-store"})
     etag = f'"{pub["version_id"]}"'
     headers = {"ETag": etag, "Cache-Control": "public, max-age=30, must-revalidate"}
     if etag_match(request, etag):
@@ -277,7 +360,7 @@ async def save_draft(body: DraftIn, member: dict = Depends(need("content.write")
 
 def link_errors(data: dict) -> list:
     slugs = {("/" + p["slug"].strip("/")) if p["slug"] != "/" else "/" for p in data["pages"]}
-    known = slugs | {"/blog", "/privacy", "/terms", "/admin"}
+    known = slugs | {"/blog", "/privacy", "/terms", "/admin", "/share-feedback"}
     errs = []
 
     def check(label, href):
@@ -317,7 +400,74 @@ async def publish(body: NoteIn, member: dict = Depends(need("publish"))):
     await db.cms.update_one({"key": "published"}, {"$set": {"data": d["data"], "version_id": vid, "published_at": iso(), "published_by": member.get("email")}})
     await db.cms.update_one({"key": "draft"}, {"$unset": {"submitted": ""}})
     await audit(member, "publish", vid, body.note)
+    for lg in d["data"]["settings"].get("siteLanguages", ["en", "ta"]):
+        if lg != "en":
+            asyncio.create_task(translate_site(lg))
     return {"version_id": vid}
+
+
+@api.get("/admin/translations/status")
+async def tr_status(member: dict = Depends(need("content.read"))):
+    pub = await get_cms("published")
+    out = []
+    for lg in pub["data"]["settings"].get("siteLanguages", ["en", "ta"]):
+        if lg == "en":
+            continue
+        tr = await get_cms(f"tr:{lg}")
+        out.append({"lang": lg, "up_to_date": bool(tr and tr["version_id"] == pub["version_id"]), "coverage": (tr or {}).get("coverage", 0),
+                    "at": (tr or {}).get("at"), "running": (lg, pub["version_id"]) in _tr_running})
+    return out
+
+
+@api.post("/admin/translations/{lang}/regenerate")
+async def tr_regen(lang: str, background: BackgroundTasks, member: dict = Depends(need("publish"))):
+    background.add_task(translate_site, lang)
+    await audit(member, "translations.regenerate", lang)
+    return {"ok": True}
+
+
+class TestimonialIn(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    role: str = Field("", max_length=120)
+    company: str = Field("", max_length=160)
+    email: str = Field(max_length=200)
+    quote: str = Field(min_length=10, max_length=1500)
+    consent: bool
+
+
+@api.post("/public/testimonials")
+async def submit_testimonial(body: TestimonialIn, request: Request):
+    svc.rate_limit(request, "testimonial", 3, 600)
+    if not body.consent or not EMAIL_RE.match(body.email):
+        raise HTTPException(400, "Please give a valid email and permission to publish")
+    doc = {**body.model_dump(), "id": nid(), "status": "pending", "created_at": iso()}
+    await db.testimonial_submissions.insert_one(dict(doc))
+    await notify("testimonial", f"New testimonial from {body.name}", body.company, "/admin/testimonials")
+    return {"ok": True}
+
+
+@api.get("/admin/testimonial-submissions")
+async def list_testimonials(member: dict = Depends(need("content.read"))):
+    return await db.testimonial_submissions.find({}, {"_id": 0}).sort("created_at", -1).to_list(500)
+
+
+@api.post("/admin/testimonial-submissions/{tid}/approve")
+async def approve_testimonial(tid: str, member: dict = Depends(need("content.write"))):
+    t = await db.testimonial_submissions.find_one({"id": tid}, {"_id": 0})
+    if not t:
+        raise HTTPException(404)
+    item = {"id": nid()[:10], "name": t["name"], "role": t["role"], "company": t["company"], "quote": t["quote"], "verified": True, "submitted_email": t["email"]}
+    await db.cms.update_one({"key": "draft"}, {"$push": {"data.testimonials": item}, "$inc": {"rev": 1}, "$set": {"updated_at": iso(), "updated_by": member.get("email")}})
+    await db.testimonial_submissions.update_one({"id": tid}, {"$set": {"status": "approved", "approved_by": member.get("email")}})
+    await audit(member, "testimonial.approve", tid)
+    return {"ok": True}
+
+
+@api.delete("/admin/testimonial-submissions/{tid}")
+async def reject_testimonial(tid: str, member: dict = Depends(need("content.write"))):
+    await db.testimonial_submissions.update_one({"id": tid}, {"$set": {"status": "rejected"}})
+    await audit(member, "testimonial.reject", tid)
+    return {"ok": True}
 
 
 @api.post("/admin/draft/discard")

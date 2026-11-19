@@ -8,10 +8,10 @@ import { useSite } from "./SiteContext";
 const LANGS = { en: "English", ta: "தமிழ்", hi: "हिन्दी", ml: "മലയാളം", kn: "ಕನ್ನಡ", te: "తెలుగు", ar: "العربية", fr: "Français", de: "Deutsch", es: "Español" };
 
 export default function ChatWidget() {
-  const { site, preview } = useSite();
+  const { site, preview, lang: siteLang } = useSite();
   const ai = site.ai;
   const [open, setOpen] = useState(false), [msgs, setMsgs] = useState([]), [text, setText] = useState(""), [busy, setBusy] = useState(false);
-  const [lang, setLang] = useState(ai.defaultLanguage || "en"), [handover, setHandover] = useState(false);
+  const [lang, setLang] = useState((ai.languages || []).includes(siteLang) ? siteLang : ai.defaultLanguage || "en"), [handover, setHandover] = useState(false);
   const sid = useRef(sessionStorage.getItem("nsw_chat") || null);
   const end = useRef(null);
   useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, handover]);

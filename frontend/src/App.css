@@ -141,3 +141,7 @@
 .site-footer .icon-btn:hover { color: var(--c-btn-text); border-color: var(--c-primary); }
 .site-footer .border-t { border-color: color-mix(in srgb, var(--c-footer-text, var(--c-text)) 15%, transparent) !important; }
 .site-footer .footer-link:hover { color: var(--c-accent); opacity: 1; }
+.tech-logo { background: #fff; border-radius: 6px; padding: 2px; width: 24px; height: 24px; }
+.cls-founder_experience { background: color-mix(in srgb, var(--c-primary) 18%, transparent); color: var(--c-accent); }
+.thumb-blur { position: absolute; inset: -20px; background-size: cover; background-position: center; filter: blur(22px) saturate(1.2); opacity: .55; }
+.proj-thumb img.object-contain { padding: 14px; }

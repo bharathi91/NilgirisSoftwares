@@ -9,6 +9,16 @@ import ChatWidget from "./ChatWidget";
 
 const SOCIAL = { linkedin: Linkedin, github: Github, twitter: Twitter, x: Twitter, instagram: Instagram, facebook: Facebook, youtube: Youtube, whatsapp: MessageCircle };
 
+function LangToggle() {
+  const { site, lang, setLang, translating } = useSite();
+  const langs = site.settings.siteLanguages || ["en", "ta"];
+  if (langs.length < 2) return null;
+  const next = langs[(langs.indexOf(lang) + 1) % langs.length];
+  const NAMES = { en: "EN", ta: "தமிழ்", hi: "हिन्दी", ml: "മലയാളം" };
+  return <button className="icon-btn !w-auto px-3 text-xs font-semibold" onClick={() => setLang(next)} aria-label="Change language" title={translating ? "Translating…" : "Change language"} data-testid="language-toggle">
+    {translating ? "…" : NAMES[next] || next.toUpperCase()}</button>;
+}
+
 function ModeToggle() {
   const { site, mode, setMode } = useSite();
   if (site.theme.allowToggle === false) return null;
@@ -44,6 +54,7 @@ export function Header() {
             {kids.length > 0 && <div className="nav-drop">{kids.map((c) => <SmartLink key={c.id} href={c.href} className="nav-drop-link" testid={`nav-sub-${c.label.toLowerCase().replace(/\W+/g, "-")}`}>{c.label}</SmartLink>)}</div>}
           </div>; })}</nav>
         <div className="flex items-center gap-2">
+          <LangToggle />
           <ModeToggle />
           {nav.ctaLabel && <SmartLink href={nav.ctaHref} className="btn-primary !py-2.5 !px-5 hidden md:inline-flex" testid="header-cta">{nav.ctaLabel}</SmartLink>}
           <button className="icon-btn lg:hidden" onClick={() => setOpen((o) => !o)} aria-label="Menu" aria-expanded={open} data-testid="mobile-menu-toggle">{open ? <X size={18} /> : <Menu size={18} />}</button>

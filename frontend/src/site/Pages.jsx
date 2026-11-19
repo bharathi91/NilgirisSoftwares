@@ -7,6 +7,8 @@ import { API, mediaUrl } from "../lib/api";
 import { SiteProvider, ThemeStyle, useSite } from "./SiteContext";
 import { SiteShell, useSeo } from "./Layout";
 import { Sections, Img, SmartLink } from "./Sections";
+import { useT } from "../lib/i18n";
+import { toast } from "sonner";
 
 const norm = (p) => (p === "/" ? "/" : p.replace(/^\/+|\/+$/g, ""));
 
@@ -69,6 +71,7 @@ const CLS = { company: "Company project", founder_experience: "Founder's previou
 
 function CaseStudy() {
   const { site } = useSite();
+  const t = useT();
   const loc = useLocation();
   const slug = decodeURIComponent(loc.pathname.replace(/^\/portfolio\//, "").replace(/\/$/, ""));
   const p = site.projects.find((x) => x.slug === slug && x.visible !== false);
@@ -78,26 +81,51 @@ function CaseStudy() {
   if (!p) return <NotFound />;
   const H = ({ children }) => <h2 className="h-title mt-14" style={{ "--title-size": "28px" }}>{children}</h2>;
   return <article className="sec" data-testid="case-study"><div className="wrap py-28" style={{ maxWidth: "1080px" }}>
-    <SmartLink href="/portfolio" className="link-arrow" testid="case-study-back">← All projects</SmartLink>
+    <SmartLink href="/portfolio" className="link-arrow" testid="case-study-back">{t("← All projects")}</SmartLink>
     <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 mt-8 items-center">
-      <div><span className={`badge cls-${p.classification}`} data-testid="case-study-classification">{CLS[p.classification]}</span>
+      <div><span className={`badge cls-${p.classification}`} data-testid="case-study-classification">{t(CLS[p.classification])}</span>
         <h1 className="h-title mt-4" style={{ "--title-size": "clamp(36px,5vw,60px)" }} data-testid="case-study-title">{p.name}</h1>
         <p className="muted mt-3">{p.category} · {p.platform}</p><p className="lead mt-5">{p.summary || p.description}</p>
         {p.link && <SmartLink href={p.link} className="btn-primary mt-8" testid="case-study-link">Visit project ↗</SmartLink>}</div>
-      {(p.cover || p.screenshots?.[0]) && <figure><div className="media-frame"><Img src={p.cover || p.screenshots[0]} alt={p.name} eager className="w-full h-full object-cover" /></div>
-        {p.coverIllustrative && <figcaption className="muted text-xs mt-2">Illustrative image</figcaption>}</figure>}
+      {(p.cover || p.screenshots?.[0]) && <figure><div className="media-frame"><div className="proj-thumb relative h-full"><span className="thumb-blur" style={{ backgroundImage: `url(${mediaUrl(p.cover || p.screenshots[0], 480)})` }} /><Img src={p.cover || p.screenshots[0]} alt={p.name} eager className="relative w-full h-full object-contain" /></div></div>
+        {p.coverIllustrative && <figcaption className="muted text-xs mt-2">{t("Illustrative image")}</figcaption>}</figure>}
     </div>
     {!!p.results?.length && <div className="grid-cols-var mt-14" style={{ "--cols": Math.min(4, p.results.length) }} data-testid="case-study-results">{p.results.map((r, i) =>
       <div key={i} className="card"><div className="stat-v">{r.value}</div><p className="muted mt-1">{r.label}</p></div>)}</div>}
-    {p.challenge && <><H>The challenge</H><p className="body-text mt-4 whitespace-pre-line">{p.challenge}</p></>}
-    {p.solution && <><H>Our approach</H><p className="body-text mt-4 whitespace-pre-line">{p.solution}</p></>}
-    {p.contribution && <><H>{p.classification === "company" ? "What we delivered" : "Role & contribution"}</H><p className="body-text mt-4">{p.contribution}</p></>}
-    {!!p.features?.length && <><H>Key features</H><ul className="grid md:grid-cols-2 gap-3 mt-5">{p.features.map((f) => <li key={f} className="card !p-4">{f}</li>)}</ul></>}
+    {p.challenge && <><H>{t("The challenge")}</H><p className="body-text mt-4 whitespace-pre-line">{p.challenge}</p></>}
+    {p.solution && <><H>{t("Our approach")}</H><p className="body-text mt-4 whitespace-pre-line">{p.solution}</p></>}
+    {p.contribution && <><H>{t(p.classification === "company" ? "What we delivered" : "Role & contribution")}</H><p className="body-text mt-4">{p.contribution}</p></>}
+    {!!p.features?.length && <><H>{t("Key features")}</H><ul className="grid md:grid-cols-2 gap-3 mt-5">{p.features.map((f) => <li key={f} className="card !p-4">{f}</li>)}</ul></>}
     {p.story && <div className="prose-site mt-12" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(p.story) }} />}
-    {!!p.tech?.length && <><H>Technology</H><div className="flex flex-wrap gap-2 mt-5">{p.tech.map((t) => <span key={t} className="chip">{t}</span>)}</div></>}
-    {!!p.screenshots?.length && <><H>Screenshots</H><div className="flex gap-4 overflow-x-auto snap-x mt-6 pb-4" data-testid="case-study-screenshots">{p.screenshots.map((u) => <Img key={u} src={u} alt={`${p.name} screenshot`} className="h-[420px] w-auto rounded-2xl snap-start border" />)}</div></>}
-    <div className="cta-box mt-20"><h2 className="h-title" style={{ "--title-size": "32px" }}>Planning something similar?</h2><SmartLink href="/contact" className="btn-primary mt-6">Start your project</SmartLink></div>
+    {!!p.tech?.length && <><H>{t("Technology")}</H><div className="flex flex-wrap gap-2 mt-5">{p.tech.map((t) => <span key={t} className="chip">{t}</span>)}</div></>}
+    {!!p.screenshots?.length && <><H>{t("Screenshots")}</H><div className="flex gap-4 overflow-x-auto snap-x mt-6 pb-4" data-testid="case-study-screenshots">{p.screenshots.map((u) => <Img key={u} src={u} alt={`${p.name} screenshot`} className="h-[420px] w-auto rounded-2xl snap-start border" />)}</div></>}
+    <div className="cta-box mt-20"><h2 className="h-title" style={{ "--title-size": "32px" }}>{t("Planning something similar?")}</h2><SmartLink href="/contact" className="btn-primary mt-6">{t("Start your project")}</SmartLink></div>
   </div></article>;
+}
+
+function ShareFeedback() {
+  const t = useT();
+  const [done, setDone] = useState(false), [busy, setBusy] = useState(false);
+  useSeo(null, { title: "Share your experience", noindex: true });
+  const submit = async (e) => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(e.currentTarget));
+    setBusy(true);
+    try { await axios.post(`${API}/public/testimonials`, { ...f, consent: !!f.consent }); setDone(true); }
+    catch (err) { toast.error(err?.response?.data?.detail || "Could not submit"); } finally { setBusy(false); }
+  };
+  return <section className="sec"><div className="wrap py-28" style={{ maxWidth: "720px" }} data-testid="share-feedback-page">
+    <p className="eyebrow">Testimonial</p><h1 className="h-title" style={{ "--title-size": "clamp(32px,5vw,48px)" }}>{t("Share your experience")}</h1>
+    {done ? <div className="card mt-8" data-testid="feedback-success">{t("Thank you! Your testimonial will appear once reviewed.")}</div> :
+    <form onSubmit={submit} className="grid md:grid-cols-2 gap-4 mt-8" data-testid="feedback-form">
+      <label><span className="form-label">{t("Your name *")}</span><input name="name" required className="input-site" data-testid="feedback-name" /></label>
+      <label><span className="form-label">{t("Email *")}</span><input name="email" type="email" required className="input-site" data-testid="feedback-email" /></label>
+      <label><span className="form-label">{t("Your role")}</span><input name="role" className="input-site" data-testid="feedback-role" /></label>
+      <label><span className="form-label">{t("Organisation")}</span><input name="company" className="input-site" data-testid="feedback-company" /></label>
+      <label className="md:col-span-2"><span className="form-label">{t("Your feedback *")}</span><textarea name="quote" required minLength={10} rows={5} className="input-site" data-testid="feedback-quote" /></label>
+      <label className="md:col-span-2 flex gap-3 items-start text-sm muted"><input type="checkbox" name="consent" required className="mt-1" data-testid="feedback-consent" />{t("I allow The Nilgiris Softwares to publish this testimonial with my name, role and organisation.")}</label>
+      <button disabled={busy} className="btn-primary md:col-span-2 justify-center" data-testid="feedback-submit">{t("Submit testimonial")}</button>
+    </form>}</div></section>;
 }
 
 export function PublicSite() {
@@ -105,6 +133,7 @@ export function PublicSite() {
   let body;
   if (loc.pathname.startsWith("/portfolio/") && loc.pathname.length > 11) body = <CaseStudy />;
   else if (loc.pathname.startsWith("/blog/")) body = <BlogPost />;
+  else if (loc.pathname === "/share-feedback") body = <ShareFeedback />;
   else if (loc.pathname === "/privacy") body = <Legal kind="privacy" />;
   else if (loc.pathname === "/terms") body = <Legal kind="terms" />;
   else body = <DynamicPage />;
