@@ -66,6 +66,8 @@ export function ThemeStyle() {
   }, [t]);
   if (!t) return null;
   const k = t.tokens;
-  const css = `.site{--c-bg:${k.bg};--c-surface:${k.surface};--c-card:${k.card};--c-primary:${k.primary};--c-secondary:${k.secondary};--c-accent:${k.accent};--c-text:${k.text};--c-muted:${k.muted};--c-border:${k.border};--c-header:${k.header};--c-footer:${k.footer};--c-btn-text:${k.buttonText};--c-hover:${k.hover};--c-shadow:${k.shadow};--g-from:${k.gradientFrom};--g-to:${k.gradientTo};--f-head:'${k.fontHeading}',sans-serif;--f-body:'${k.fontBody}',sans-serif;--fs-base:${k.baseSize}px;--fw-head:${k.headingWeight};--fw-body:${k.bodyWeight};--radius-c:${k.radius}px;--space:${k.spacing};--container:${k.container}px;color-scheme:${t.mode}}`;
+  const lum = (h) => { const n = parseInt((h || "#000000").replace("#", "").padEnd(6, "0").slice(0, 6), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
+  const footText = k.footerText || (lum(k.footer) < 0.5 ? "#F7FAFC" : "#0B1A14");
+  const css = `.site{--c-bg:${k.bg};--c-surface:${k.surface};--c-card:${k.card};--c-primary:${k.primary};--c-secondary:${k.secondary};--c-accent:${k.accent};--c-text:${k.text};--c-muted:${k.muted};--c-border:${k.border};--c-header:${k.header};--c-footer:${k.footer};--c-footer-text:${footText};--c-btn-text:${k.buttonText};--c-hover:${k.hover};--c-shadow:${k.shadow};--g-from:${k.gradientFrom};--g-to:${k.gradientTo};--f-head:'${k.fontHeading}',sans-serif;--f-body:'${k.fontBody}',sans-serif;--fs-base:${k.baseSize}px;--fw-head:${k.headingWeight};--fw-body:${k.bodyWeight};--radius-c:${k.radius}px;--space:${k.spacing};--container:${k.container}px;color-scheme:${t.mode}}`;
   return <style>{css}</style>;
 }

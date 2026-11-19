@@ -134,3 +134,9 @@
 .card:hover .feature-img img { transform: scale(1.05); }
 .founder-photo { aspect-ratio: auto; }
 @media (max-width: 767px) { .hero-controls { flex-wrap: wrap; padding-right: 80px; gap: 8px; } .hero-controls .dot { width: 18px; } .hero-controls .dot.on { width: 30px; } }
+.site-footer { color: var(--c-footer-text, var(--c-text)); }
+.site-footer .footer-link, .site-footer .logo-text { color: var(--c-footer-text, var(--c-text)); }
+.site-footer .muted, .site-footer .footer-h { color: color-mix(in srgb, var(--c-footer-text, var(--c-text)) 65%, transparent); }
+.site-footer .icon-btn { color: var(--c-footer-text, var(--c-text)); border-color: color-mix(in srgb, var(--c-footer-text, var(--c-text)) 25%, transparent); }
+.site-footer .icon-btn:hover { color: var(--c-btn-text); border-color: var(--c-primary); }
+.site-footer .border-t { border-color: color-mix(in srgb, var(--c-footer-text, var(--c-text)) 15%, transparent) !important; }
