@@ -129,11 +129,22 @@ const PageHeader = ({ s }) => (
       <E sid={s.id} field="subtitle" value={s.props.subtitle} as="p" className="lead mt-5" /></div>
   </div>);
 
+function MiniCarousel({ images }) {
+  const [i, setI] = useState(0);
+  const reduce = useReducedMotion();
+  useEffect(() => { if (reduce) return; const t = setTimeout(() => setI((x) => (x + 1) % images.length), 4000); return () => clearTimeout(t); }, [i, images.length, reduce]);
+  return <div className="media-frame relative" data-testid="about-carousel">
+    <AnimatePresence mode="sync"><motion.div key={i} className="absolute inset-0" initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.9 }}>
+      <Img src={images[i]} className="w-full h-full object-cover" /></motion.div></AnimatePresence>
+    <div className="absolute bottom-4 left-4 flex gap-2 z-10">{images.map((_, k) => <button key={k} aria-label={`Image ${k + 1}`} onClick={() => setI(k)} className={`dot ${k === i ? "on" : ""}`} data-testid={`about-carousel-dot-${k}`} />)}</div>
+  </div>;
+}
+
 const TextBlock = ({ s }) => {
-  const p = s.props, img = p.image && p.imagePosition !== "none";
+  const p = s.props, gallery = (p.images || []).filter(Boolean), img = (p.image || gallery.length) && p.imagePosition !== "none";
   return (<div className={`grid gap-12 items-center ${img ? "lg:grid-cols-2" : ""}`}>
     <div className={p.imagePosition === "left" ? "lg:order-2" : ""}><Head s={s} /><E sid={s.id} field="body" value={p.body} as="p" className="body-text mt-6 whitespace-pre-line" /><BTNS buttons={p.buttons} /></div>
-    {img && <div className="media-frame"><Img src={p.image} className="w-full h-full object-cover" /></div>}
+    {img && (gallery.length > 1 ? <MiniCarousel images={gallery} /> : <div className="media-frame"><Img src={gallery[0] || p.image} className="w-full h-full object-cover" /></div>)}
   </div>);
 };
 
@@ -154,7 +165,9 @@ function ServicesGrid({ s }) {
 }
 
 const FeatureCards = ({ s }) => (<><Head s={s} /><Grid>{(s.props.items || []).map((x, i) => (
-  <div key={i} className="card text-left" data-testid={`feature-card-${i}`}><span className="icon-chip"><Icon name={x.icon} size={22} /></span>
+  <div key={i} className={`card text-left ${x.image ? "!pt-0 overflow-hidden" : ""}`} data-testid={`feature-card-${i}`}>
+    {x.image && <div className="feature-img -mx-7 mb-6"><Img src={x.image} alt={x.title} sizes="(min-width:1024px) 25vw, 100vw" className="w-full h-full object-cover" /></div>}
+    <span className="icon-chip"><Icon name={x.icon} size={22} /></span>
     <h3 className="card-title mt-6">{x.title}</h3><p className="muted mt-3">{x.text}</p></div>))}</Grid></>);
 
 const Stats = ({ s }) => (<><Head s={s} /><Grid>{(s.props.items || []).map((x, i) => (
@@ -170,7 +183,8 @@ function TechStack({ s }) {
     <div className="flex flex-wrap gap-2 mt-10" role="tablist">{["All", ...cats].map((c) => (
       <button key={c} role="tab" aria-selected={cat === c} onClick={() => setCat(c)} className={`pill ${cat === c ? "on" : ""}`} data-testid={`tech-tab-${c.toLowerCase()}`}>{c}</button>))}</div>
     <motion.div layout className="flex flex-wrap gap-3 mt-8">{list.map((t) => (
-      <motion.span layout key={t.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="chip">{t.name}<small>{t.category}</small></motion.span>))}</motion.div></>);
+      <motion.span layout key={t.id} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="chip tech-chip" data-testid={`tech-chip-${t.name.toLowerCase().replace(/\W+/g, "-")}`}>
+        {t.image && <img src={mediaUrl(t.image)} alt="" width="22" height="22" loading="lazy" className="tech-logo" onError={(e) => { e.currentTarget.style.display = "none"; }} />}{t.name}<small>{t.category}</small></motion.span>))}</motion.div></>);
 }
 
 export const CLASS_LABEL = { company: "Company project", founder_experience: "Founder's previous professional experience", personal: "Personal project", demo: "Demonstration project" };
@@ -191,7 +205,8 @@ function Projects({ s }) {
     </div>}
     <Grid testid="projects-grid">{shown.map((p) => (
       <button key={p.id} onClick={() => setOpen(p)} className="card card-hover text-left p-0 overflow-hidden" data-testid={`project-card-${p.id}`}>
-        <div className="proj-thumb">{p.screenshots?.[0] ? <Img src={p.screenshots[0]} className="w-full h-full object-cover" /> : <span className="proj-initial">{p.name[0]}</span>}</div>
+        <div className="proj-thumb relative">{p.cover || p.screenshots?.[0] ? <Img src={p.cover || p.screenshots[0]} alt={p.name} className="w-full h-full object-cover" /> : <span className="proj-initial">{p.name[0]}</span>}
+          {p.coverIllustrative && <span className="illus-tag">Illustrative image</span>}</div>
         <div className="p-6"><span className={`badge cls-${p.classification}`}>{CLASS_LABEL[p.classification]}</span>
           <h3 className="card-title mt-4">{p.name}</h3><p className="muted text-sm mt-1">{p.category} · {p.platform}</p>
           <p className="muted mt-3 line-clamp-2">{p.description}</p></div>
@@ -207,7 +222,8 @@ function Projects({ s }) {
         {!!open.features?.length && <ul className="mt-5 space-y-1 list-disc pl-5 muted">{open.features.map((f) => <li key={f}>{f}</li>)}</ul>}
         {!!open.tech?.length && <div className="flex flex-wrap gap-2 mt-5">{open.tech.map((t) => <span key={t} className="chip">{t}</span>)}</div>}
         {!!open.screenshots?.length && <div className="flex gap-3 overflow-x-auto mt-6 snap-x">{open.screenshots.map((u) => <Img key={u} src={u} className="h-64 rounded-xl snap-start" />)}</div>}
-        {open.link && <SmartLink href={open.link} className="btn-primary mt-7" testid="project-external-link">Visit project <ArrowUpRight size={16} /></SmartLink>}
+        <div className="flex flex-wrap gap-3 mt-7">{open.slug && <SmartLink href={`/portfolio/${open.slug}`} className="btn-primary" testid="project-case-study-link">Read case study <ArrowUpRight size={16} /></SmartLink>}
+          {open.link && <SmartLink href={open.link} className="btn-ghost" testid="project-external-link">Visit project <ArrowUpRight size={16} /></SmartLink>}</div>
       </motion.div></motion.div>}</AnimatePresence></>);
 }
 
@@ -217,17 +233,25 @@ const Process = ({ s }) => (<><Head s={s} /><div className="grid-cols-var mt-12"
 function Founder({ s }) {
   const { site } = useSite();
   const f = site.founder;
+  const go = s.props.buttonHref || f.links?.portfolio;
   return (<><Head s={s} />
     <div className="grid lg:grid-cols-[320px_1fr] gap-10 mt-12 items-start text-left">
-      <div className="media-frame aspect-[4/5]">{f.photo ? <Img src={f.photo} alt={f.name} className="w-full h-full object-cover" /> : <div className="proj-initial h-full flex items-center justify-center">{f.name?.[0]}</div>}</div>
-      <div><h3 className="card-title text-2xl" data-testid="founder-name">{f.name}</h3><p className="accent mt-1">{f.title}</p>
+      <SmartLink href={go || "/about"} className="media-frame aspect-[4/5] block card-hover" testid="founder-photo-link">{f.photo ? <Img src={f.photo} alt={f.name} className="w-full h-full object-cover" /> : <div className="proj-initial h-full flex items-center justify-center">{f.name?.[0]}</div>}</SmartLink>
+      <div><SmartLink href={go || "/about"} className="card-title text-2xl hover:text-[var(--c-accent)]" testid="founder-name">{f.name}</SmartLink><p className="accent mt-1">{f.title}</p>
         <p className="body-text mt-5">{f.bio}</p>
         <div className="flex flex-wrap gap-2 mt-6">{(f.expertise || []).map((x) => <span key={x} className="chip">{x}</span>)}</div>
         {s.props.showFull && !!f.domains?.length && <p className="muted mt-6">Industry experience: {f.domains.join(" · ")}</p>}
         {s.props.showFull && !!f.experience?.length && <div className="mt-8 space-y-5 border-l pl-6" style={{ borderColor: "var(--c-border)" }}>{f.experience.map((x, i) => (
           <div key={i}><p className="card-title">{x.role} · <span className="muted">{x.company}</span></p><p className="text-sm accent">{x.period}</p><p className="muted mt-1">{x.summary}</p></div>))}</div>}
-        <div className="flex gap-3 mt-7">{f.links?.linkedin && <SmartLink href={f.links.linkedin} className="icon-btn" testid="founder-linkedin"><Linkedin size={18} /></SmartLink>}
-          {f.links?.github && <SmartLink href={f.links.github} className="icon-btn" testid="founder-github"><Github size={18} /></SmartLink>}</div>
+        {s.props.showFull && !!f.achievements?.length && <div className="grid sm:grid-cols-2 gap-4 mt-8">{f.achievements.map((a, i) => (
+          <div key={i} className="card !p-5"><div className="stat-v !text-4xl">{a.value}</div><p className="muted text-sm mt-1">{a.label}</p></div>))}</div>}
+        {s.props.showFull && f.education && <p className="muted mt-6">Education: {f.education}</p>}
+        <div className="flex flex-wrap items-center gap-3 mt-7">
+          {go && <SmartLink href={go} className="btn-primary" testid="founder-portfolio-link">{s.props.buttonLabel || "Meet the founder"} <ArrowUpRight size={16} /></SmartLink>}
+          {f.links?.linkedin && <SmartLink href={f.links.linkedin} className="icon-btn" testid="founder-linkedin"><Linkedin size={18} /></SmartLink>}
+          {f.links?.github && <SmartLink href={f.links.github} className="icon-btn" testid="founder-github"><Github size={18} /></SmartLink>}
+          {f.links?.stackoverflow && <SmartLink href={f.links.stackoverflow} className="pill" testid="founder-stackoverflow">Stack Overflow</SmartLink>}
+          {f.links?.medium && <SmartLink href={f.links.medium} className="pill" testid="founder-medium">Medium</SmartLink>}</div>
       </div></div></>);
 }
 

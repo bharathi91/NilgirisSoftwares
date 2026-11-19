@@ -123,3 +123,12 @@
 @media (min-width: 768px) { .site .md\:inline-flex { display: inline-flex; } .site .md\:block { display: block; } }
 @media (min-width: 1024px) { .site .lg\:hidden { display: none; } .site .lg\:flex { display: flex; } }
 @media (max-width: 767px) { .cookie { right: 88px; } }
+.wa-fab { position: fixed; right: 20px; bottom: 90px; z-index: 70; width: 58px; height: 58px; border-radius: 999px; background: #25D366; color: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 18px 40px -12px rgba(37,211,102,.7); transition: transform .25s; }
+.wa-fab:hover { transform: scale(1.06); }
+.illus-tag { position: absolute; right: 10px; bottom: 10px; font-size: 10px; padding: 3px 8px; border-radius: 999px; background: rgba(0,0,0,.55); color: #fff; backdrop-filter: blur(6px); }
+.chat-panel { bottom: 160px; height: min(560px, calc(100svh - 190px)); }
+.tech-chip { align-items: center; padding: 12px 18px; }
+.tech-logo { width: 22px; height: 22px; object-fit: contain; }
+.feature-img { aspect-ratio: 16/9; overflow: hidden; border-bottom: 1px solid var(--c-border); }
+.feature-img img { transition: transform .6s cubic-bezier(.22,1,.36,1); }
+.card:hover .feature-img img { transform: scale(1.05); }

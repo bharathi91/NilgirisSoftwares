@@ -65,10 +65,45 @@ function BlogPost() {
   </div></article>;
 }
 
+const CLS = { company: "Company project", founder_experience: "Founder's previous professional experience", personal: "Personal project", demo: "Demonstration project" };
+
+function CaseStudy() {
+  const { site } = useSite();
+  const loc = useLocation();
+  const slug = decodeURIComponent(loc.pathname.replace(/^\/portfolio\//, "").replace(/\/$/, ""));
+  const p = site.projects.find((x) => x.slug === slug && x.visible !== false);
+  useSeo(null, p ? { title: `${p.name} — Case study`, description: p.summary || p.description, ogImage: p.cover || p.screenshots?.[0],
+    jsonld: JSON.stringify({ "@context": "https://schema.org", "@type": "CreativeWork", name: p.name, about: p.category, description: p.description }) } : { title: "Not found", noindex: true });
+  if (!p) return <NotFound />;
+  const H = ({ children }) => <h2 className="h-title mt-14" style={{ "--title-size": "28px" }}>{children}</h2>;
+  return <article className="sec" data-testid="case-study"><div className="wrap py-28" style={{ maxWidth: "1080px" }}>
+    <SmartLink href="/portfolio" className="link-arrow" testid="case-study-back">← All projects</SmartLink>
+    <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 mt-8 items-center">
+      <div><span className={`badge cls-${p.classification}`} data-testid="case-study-classification">{CLS[p.classification]}</span>
+        <h1 className="h-title mt-4" style={{ "--title-size": "clamp(36px,5vw,60px)" }} data-testid="case-study-title">{p.name}</h1>
+        <p className="muted mt-3">{p.category} · {p.platform}</p><p className="lead mt-5">{p.summary || p.description}</p>
+        {p.link && <SmartLink href={p.link} className="btn-primary mt-8" testid="case-study-link">Visit project ↗</SmartLink>}</div>
+      {(p.cover || p.screenshots?.[0]) && <figure><div className="media-frame"><Img src={p.cover || p.screenshots[0]} alt={p.name} eager className="w-full h-full object-cover" /></div>
+        {p.coverIllustrative && <figcaption className="muted text-xs mt-2">Illustrative image</figcaption>}</figure>}
+    </div>
+    {!!p.results?.length && <div className="grid-cols-var mt-14" style={{ "--cols": Math.min(4, p.results.length) }} data-testid="case-study-results">{p.results.map((r, i) =>
+      <div key={i} className="card"><div className="stat-v">{r.value}</div><p className="muted mt-1">{r.label}</p></div>)}</div>}
+    {p.challenge && <><H>The challenge</H><p className="body-text mt-4 whitespace-pre-line">{p.challenge}</p></>}
+    {p.solution && <><H>Our approach</H><p className="body-text mt-4 whitespace-pre-line">{p.solution}</p></>}
+    {p.contribution && <><H>{p.classification === "company" ? "What we delivered" : "Role & contribution"}</H><p className="body-text mt-4">{p.contribution}</p></>}
+    {!!p.features?.length && <><H>Key features</H><ul className="grid md:grid-cols-2 gap-3 mt-5">{p.features.map((f) => <li key={f} className="card !p-4">{f}</li>)}</ul></>}
+    {p.story && <div className="prose-site mt-12" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(p.story) }} />}
+    {!!p.tech?.length && <><H>Technology</H><div className="flex flex-wrap gap-2 mt-5">{p.tech.map((t) => <span key={t} className="chip">{t}</span>)}</div></>}
+    {!!p.screenshots?.length && <><H>Screenshots</H><div className="flex gap-4 overflow-x-auto snap-x mt-6 pb-4" data-testid="case-study-screenshots">{p.screenshots.map((u) => <Img key={u} src={u} alt={`${p.name} screenshot`} className="h-[420px] w-auto rounded-2xl snap-start border" />)}</div></>}
+    <div className="cta-box mt-20"><h2 className="h-title" style={{ "--title-size": "32px" }}>Planning something similar?</h2><SmartLink href="/contact" className="btn-primary mt-6">Start your project</SmartLink></div>
+  </div></article>;
+}
+
 export function PublicSite() {
   const loc = useLocation();
   let body;
-  if (loc.pathname.startsWith("/blog/")) body = <BlogPost />;
+  if (loc.pathname.startsWith("/portfolio/") && loc.pathname.length > 11) body = <CaseStudy />;
+  else if (loc.pathname.startsWith("/blog/")) body = <BlogPost />;
   else if (loc.pathname === "/privacy") body = <Legal kind="privacy" />;
   else if (loc.pathname === "/terms") body = <Legal kind="terms" />;
   else body = <DynamicPage />;

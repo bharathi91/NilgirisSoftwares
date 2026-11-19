@@ -287,7 +287,7 @@ def link_errors(data: dict) -> list:
             return
         elif href.startswith("/"):
             base = href.split("#")[0].split("?")[0].rstrip("/") or "/"
-            if base not in known and not base.startswith("/blog/"):
+            if base not in known and not base.startswith(("/blog/", "/portfolio/")):
                 errs.append(f"{label}: '{href}' does not match any page")
         else:
             errs.append(f"{label}: '{href}' must start with / or https://")
@@ -1331,6 +1331,7 @@ async def sitemap(request: Request):
     base = (pub["seo"].get("siteUrl") or f"https://{request.headers.get('x-forwarded-host') or request.headers.get('host')}").rstrip("/")
     urls = [("/" if p["slug"] == "/" else "/" + p["slug"]) for p in pub["pages"] if not p.get("seo", {}).get("noindex")]
     urls += [f"/blog/{p['slug']}" async for p in db.posts.find(_live_filter(), {"slug": 1})]
+    urls += [f"/portfolio/{p['slug']}" for p in pub["projects"] if p.get("slug") and p.get("visible", True)]
     body = "".join(f"<url><loc>{base}{u}</loc></url>" for u in urls)
     return Response(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{body}</urlset>',
                     media_type="application/xml", headers={"Cache-Control": "public, max-age=600"})
