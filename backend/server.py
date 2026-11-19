@@ -62,6 +62,7 @@ INDEXES = {
     "translations": [IndexModel([("lang", ASCENDING), ("h", ASCENDING)], name="lang_h", unique=True)],
     "testimonial_submissions": [IndexModel([("id", ASCENDING)], name="id", unique=True)],
     "email_templates": [IndexModel([("id", ASCENDING)], name="id", unique=True)],
+    "portfolio_versions": [IndexModel([("id", ASCENDING)], name="id", unique=True), IndexModel([("at", DESCENDING)], name="at")],
 }
 
 app = FastAPI(title="The Nilgiris Softwares CMS API")
@@ -293,23 +294,24 @@ async def translate_site(lang: str):
 @api.get("/public/site")
 async def public_site(request: Request, background: BackgroundTasks, lang: str = ""):
     pub = await get_cms("published")
+    pfv, pfnav = await pf_nav()
     langs = pub["data"]["settings"].get("siteLanguages", ["en", "ta"])
     if lang and lang != "en" and lang in langs:
         tr = await get_cms(f"tr:{lang}")
         if tr and tr["version_id"] == pub["version_id"]:
-            etag = f'"{pub["version_id"]}-{lang}"'
+            etag = f'"{pub["version_id"]}-{pfv}-{lang}"'
             headers = {"ETag": etag, "Cache-Control": "public, max-age=30, must-revalidate"}
             if etag_match(request, etag):
                 return Response(status_code=304, headers=headers)
-            return Response(json.dumps({"version": pub["version_id"], "lang": lang, "data": tr["data"]}), media_type="application/json", headers=headers)
+            return Response(json.dumps({"version": pub["version_id"], "lang": lang, "data": tr["data"], "portfolio_nav": pfnav}), media_type="application/json", headers=headers)
         background.add_task(translate_site, lang)
-        return Response(json.dumps({"version": pub["version_id"], "lang": "en", "translating": True, "data": public_view(pub["data"])}),
+        return Response(json.dumps({"version": pub["version_id"], "lang": "en", "translating": True, "data": public_view(pub["data"]), "portfolio_nav": pfnav}),
                         media_type="application/json", headers={"Cache-Control": "no-store"})
-    etag = f'"{pub["version_id"]}"'
+    etag = f'"{pub["version_id"]}-{pfv}"'
     headers = {"ETag": etag, "Cache-Control": "public, max-age=30, must-revalidate"}
     if etag_match(request, etag):
         return Response(status_code=304, headers=headers)
-    body = json.dumps({"version": pub["version_id"], "data": public_view(pub["data"])})
+    body = json.dumps({"version": pub["version_id"], "data": public_view(pub["data"]), "portfolio_nav": pfnav})
     return Response(content=body, media_type="application/json", headers=headers)
 
 
@@ -360,7 +362,7 @@ async def save_draft(body: DraftIn, member: dict = Depends(need("content.write")
 
 def link_errors(data: dict) -> list:
     slugs = {("/" + p["slug"].strip("/")) if p["slug"] != "/" else "/" for p in data["pages"]}
-    known = slugs | {"/blog", "/privacy", "/terms", "/admin", "/share-feedback"}
+    known = slugs | {"/blog", "/privacy", "/terms", "/admin", "/share-feedback", "/portfolio"}
     errs = []
 
     def check(label, href):
@@ -370,7 +372,7 @@ def link_errors(data: dict) -> list:
             return
         elif href.startswith("/"):
             base = href.split("#")[0].split("?")[0].rstrip("/") or "/"
-            if base not in known and not base.startswith(("/blog/", "/portfolio/")):
+            if base not in known and not base.startswith(("/blog/", "/projects/", "/portfolio/")):
                 errs.append(f"{label}: '{href}' does not match any page")
         else:
             errs.append(f"{label}: '{href}' must start with / or https://")
@@ -1481,7 +1483,10 @@ async def sitemap(request: Request):
     base = (pub["seo"].get("siteUrl") or f"https://{request.headers.get('x-forwarded-host') or request.headers.get('host')}").rstrip("/")
     urls = [("/" if p["slug"] == "/" else "/" + p["slug"]) for p in pub["pages"] if not p.get("seo", {}).get("noindex")]
     urls += [f"/blog/{p['slug']}" async for p in db.posts.find(_live_filter(), {"slug": 1})]
-    urls += [f"/portfolio/{p['slug']}" for p in pub["projects"] if p.get("slug") and p.get("visible", True)]
+    urls += [f"/projects/{p['slug']}" for p in pub["projects"] if p.get("slug") and p.get("visible", True)]
+    pf = await pf_published()
+    if pf and not pf["data"].get("seo", {}).get("noindex"):
+        urls += ["/portfolio", "/portfolio/quick-view"] + [f"/portfolio/work/{p['id']}" for p in pf["data"]["projects"] if p.get("visible", True)]
     body = "".join(f"<url><loc>{base}{u}</loc></url>" for u in urls)
     return Response(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{body}</urlset>',
                     media_type="application/xml", headers={"Cache-Control": "public, max-age=600"})
@@ -1496,6 +1501,156 @@ async def robots():
 @api.get("/health")
 async def health():
     return {"ok": True}
+
+
+# ===================== Personal portfolio (/portfolio) =====================
+PF_LISTS = ["sections", "projects", "skills", "experiences", "achievements", "education", "certifications", "buttons", "nav_items", "testimonials"]
+PF_KEYS = {"profile", "theme", "seo", "site", "sections", "skills", "experiences", "projects", "education", "achievements", "settings", "resume"}
+
+
+async def pf_published() -> Optional[dict]:
+    return await get_cms("pf:published")
+
+
+async def pf_nav() -> tuple[str, dict]:
+    pf = await pf_published()
+    if not pf:
+        return "none", {"visible": False}
+    st = pf["data"].get("settings", {})
+    return pf["version_id"], {"visible": st.get("showInNav", True), "label": st.get("navLabel") or "My Portfolio"}
+
+
+def pf_public_view(data: dict) -> dict:
+    d = json.loads(json.dumps(data))
+    for k in PF_LISTS:
+        if isinstance(d.get(k), list):
+            d[k] = [x for x in d[k] if not isinstance(x, dict) or x.get("visible", True) is not False]
+    r = d.get("resume") or {}
+    d["resume"] = {"available": bool(r.get("available") and r.get("media_id")), "filename": r.get("filename", ""), "size": r.get("size"),
+                   "updated_at": r.get("updated_at"), "url": "/api/public/portfolio/resume"}
+    return d
+
+
+@api.get("/public/portfolio")
+async def public_portfolio(request: Request):
+    pf = await pf_published()
+    if not pf:
+        raise HTTPException(404, "Portfolio not published yet")
+    etag = f'"pf-{pf["version_id"]}"'
+    headers = {"ETag": etag, "Cache-Control": "public, max-age=30, must-revalidate"}
+    if etag_match(request, etag):
+        return Response(status_code=304, headers=headers)
+    return Response(json.dumps({"version": pf["version_id"], "data": pf_public_view(pf["data"])}), media_type="application/json", headers=headers)
+
+
+@api.get("/public/portfolio/resume")
+async def portfolio_resume(request: Request):
+    pf = await pf_published()
+    r = (pf or {}).get("data", {}).get("resume") or {}
+    rec = await db.media.find_one({"id": r.get("media_id"), "deleted": False}, {"_id": 0}) if r.get("available") else None
+    if not rec:
+        raise HTTPException(404, "Résumé not available")
+    etag = f'"{rec["hash"]}"'
+    headers = {"Cache-Control": "public, max-age=300, must-revalidate", "ETag": etag, "X-Content-Type-Options": "nosniff",
+               "Content-Disposition": f'attachment; filename="{(r.get("filename") or rec["name"]).replace(chr(34), "")}"'}
+    if etag_match(request, etag):
+        return Response(status_code=304, headers=headers)
+    fp = await _cached_bytes(f"{rec['storage_base']}.{rec['ext']}")
+    return Response(fp.read_bytes(), media_type=rec["content_type"], headers=headers)
+
+
+class PfContactIn(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    email: str = Field(max_length=200)
+    subject: str = Field("", max_length=200)
+    message: str = Field(min_length=1, max_length=5000)
+    website: str = ""
+
+
+@api.post("/public/portfolio/contact")
+async def portfolio_contact(body: PfContactIn, request: Request, background: BackgroundTasks):
+    svc.rate_limit(request, "pfcontact", 5, 300)
+    if body.website:
+        return {"ok": True}
+    email = body.email.strip().lower()
+    if not EMAIL_RE.match(email):
+        raise HTTPException(400, "Please enter a valid email")
+    lead = {"id": nid(), "name": body.name.strip(), "email": email, "phone": "", "company": "", "country": "",
+            "service": body.subject.strip() or "Portfolio enquiry", "budget": "", "timeline": "", "message": body.message,
+            "status": "new", "source": "portfolio", "notes": [], "assigned_to": "", "follow_up": "", "attachment": None,
+            "created_at": iso(), "updated_at": iso(), "activity": [{"at": iso(), "by": "visitor", "text": "Message sent from the My Portfolio page"}]}
+    await db.leads.insert_one(dict(lead))
+    await notify("lead", f"Portfolio message from {lead['name']}", lead["service"], f"/admin/leads?id={lead['id']}")
+    background.add_task(email_team_about_lead, lead)
+    return {"ok": True}
+
+
+def pf_validate(data: dict):
+    missing = PF_KEYS - set(data)
+    if missing:
+        raise HTTPException(400, f"Missing portfolio parts: {', '.join(sorted(missing))}")
+    if len(json.dumps(data)) > 4_000_000:
+        raise HTTPException(413, "Content too large")
+
+
+@api.get("/admin/portfolio/draft")
+async def pf_get_draft(member: dict = Depends(need("content.read"))):
+    d = await get_cms("pf:draft")
+    pub = await pf_published()
+    if not d or not pub:
+        raise HTTPException(404, "Portfolio has not been imported yet")
+    return {**d, "published_version": pub["version_id"], "published_at": pub.get("published_at"), "has_unpublished": d["data"] != pub["data"]}
+
+
+@api.put("/admin/portfolio/draft")
+async def pf_save_draft(body: DraftIn, member: dict = Depends(need("content.write"))):
+    pf_validate(body.data)
+    res = await db.cms.find_one_and_update(
+        {"key": "pf:draft", "rev": body.rev},
+        {"$set": {"data": body.data, "updated_at": iso(), "updated_by": member.get("email")}, "$inc": {"rev": 1}},
+        return_document=ReturnDocument.AFTER, projection={"_id": 0, "rev": 1, "updated_at": 1})
+    if not res:
+        cur = await get_cms("pf:draft")
+        raise HTTPException(409, f"Someone else ({cur.get('updated_by')}) saved portfolio changes at {cur.get('updated_at')}. Reload to get the latest draft.")
+    await audit(member, "portfolio.draft.save", "portfolio")
+    return res
+
+
+@api.post("/admin/portfolio/publish")
+async def pf_publish(body: NoteIn, member: dict = Depends(need("publish"))):
+    d = await get_cms("pf:draft")
+    pf_validate(d["data"])
+    vid = nid()
+    await db.portfolio_versions.insert_one({"id": vid, "at": iso(), "by": member.get("email"), "kind": "publish", "note": body.note, "data": d["data"]})
+    await db.cms.update_one({"key": "pf:published"}, {"$set": {"data": d["data"], "version_id": vid, "published_at": iso(), "published_by": member.get("email")}})
+    await audit(member, "portfolio.publish", vid, body.note)
+    return {"version_id": vid}
+
+
+@api.post("/admin/portfolio/discard")
+async def pf_discard(member: dict = Depends(need("content.write"))):
+    pub = await pf_published()
+    await db.cms.update_one({"key": "pf:draft"}, {"$set": {"data": pub["data"], "updated_at": iso(), "updated_by": member.get("email")}, "$inc": {"rev": 1}})
+    await audit(member, "portfolio.draft.discard", "portfolio")
+    return {"ok": True}
+
+
+@api.get("/admin/portfolio/versions")
+async def pf_versions(member: dict = Depends(need("content.read")), limit: int = 50):
+    return await db.portfolio_versions.find({}, {"_id": 0, "data": 0}).sort("at", -1).limit(limit).to_list(limit)
+
+
+@api.post("/admin/portfolio/versions/{vid}/restore")
+async def pf_restore(vid: str, member: dict = Depends(need("publish"))):
+    v = await db.portfolio_versions.find_one({"id": vid}, {"_id": 0})
+    if not v:
+        raise HTTPException(404, "Version not found")
+    new_id = nid()
+    await db.portfolio_versions.insert_one({"id": new_id, "at": iso(), "by": member.get("email"), "kind": "rollback", "note": f"Restored version from {v['at']}", "data": v["data"]})
+    await db.cms.update_one({"key": "pf:published"}, {"$set": {"data": v["data"], "version_id": new_id, "published_at": iso(), "published_by": member.get("email")}})
+    await db.cms.update_one({"key": "pf:draft"}, {"$set": {"data": v["data"], "updated_at": iso(), "updated_by": member.get("email")}, "$inc": {"rev": 1}})
+    await audit(member, "portfolio.rollback", vid)
+    return {"version_id": new_id}
 
 
 PERMS["super_admin"] = {"*"}  # includes publish, users.manage, settings.manage, backup

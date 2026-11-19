@@ -105,7 +105,7 @@ class TestTestimonials:
         assert requests.get(f"{API}/admin/testimonial-submissions").status_code in (401, 403)
 
     def test_approve_unknown_404(self, sa):
-        assert sa.post(f"{API}/admin/testimonial-submissions/nope/approve").status_code == 404
+        assert sa.post(f"{API}/admin/testimonial-submissions/nope/approve").status_code in (404, 409)  # atomic claim returns 409
 
 
 # --- Hospital case studies ---

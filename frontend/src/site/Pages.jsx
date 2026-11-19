@@ -73,7 +73,7 @@ function CaseStudy() {
   const { site } = useSite();
   const t = useT();
   const loc = useLocation();
-  const slug = decodeURIComponent(loc.pathname.replace(/^\/portfolio\//, "").replace(/\/$/, ""));
+  const slug = decodeURIComponent(loc.pathname.replace(/^\/projects\//, "").replace(/\/$/, ""));
   const p = site.projects.find((x) => x.slug === slug && x.visible !== false);
   useEffect(() => { window.scrollTo(0, 0); }, [slug]);
   useSeo(null, p ? { title: `${p.name} — Case study`, description: p.summary || p.description, ogImage: p.cover || p.screenshots?.[0],
@@ -81,7 +81,7 @@ function CaseStudy() {
   if (!p) return <NotFound />;
   const H = ({ children }) => <h2 className="h-title mt-14" style={{ "--title-size": "28px" }}>{children}</h2>;
   return <article className="sec" data-testid="case-study"><div className="wrap py-28" style={{ maxWidth: "1080px" }}>
-    <SmartLink href="/portfolio" className="link-arrow" testid="case-study-back">{t("← All projects")}</SmartLink>
+    <SmartLink href="/projects" className="link-arrow" testid="case-study-back">{t("← All projects")}</SmartLink>
     <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 mt-8 items-center">
       <div><span className={`badge cls-${p.classification}`} data-testid="case-study-classification">{t(CLS[p.classification])}</span>
         <h1 className="h-title mt-4" style={{ "--title-size": "clamp(36px,5vw,60px)" }} data-testid="case-study-title">{p.name}</h1>
@@ -131,7 +131,7 @@ function ShareFeedback() {
 export function PublicSite() {
   const loc = useLocation();
   let body;
-  if (loc.pathname.startsWith("/portfolio/") && loc.pathname.length > 11) body = <CaseStudy />;
+  if (loc.pathname.startsWith("/projects/") && loc.pathname.length > 10) body = <CaseStudy />;
   else if (loc.pathname.startsWith("/blog/")) body = <BlogPost />;
   else if (loc.pathname === "/share-feedback") body = <ShareFeedback />;
   else if (loc.pathname === "/privacy") body = <Legal kind="privacy" />;

@@ -1,0 +1,1348 @@
+{
+ "profile": {
+  "name": "Bharathi Kumar N",
+  "headline": "iOS Mobile Engineer | Swift & Architecture Patterns | High-Quality Mobile Apps",
+  "tagline": "Senior iOS developer with 10 years of experience in mobile application development and software engineering, expert in Swift and Objective-C.",
+  "summary": "Senior iOS developer with 10 years of experience in mobile application development and software engineering, expert in Swift and Objective-C. My key achievements include successfully managing the app updates and rollouts for multiple high-profile applications, including MoneyGram and Dubai Culture, while significantly improving performance and user experience across various iOS apps. Seeking an iOS Mobile Engineer position at your company, where I bring my deep understanding of Apple development workflows and commitment to delivering high-quality mobile experiences to support your mission of creating innovative and reliable applications.",
+  "summary_points": [
+   "Senior iOS developer with 10 years of experience in mobile application development and software engineering",
+   "Expert in Swift and Objective-C",
+   "Successfully managed app updates and rollouts for multiple high-profile applications, including MoneyGram and Dubai Culture",
+   "Significantly improved performance and user experience across various iOS apps",
+   "Deep understanding of Apple development workflows",
+   "Committed to delivering high-quality mobile experiences and innovative, reliable applications",
+   "Seeking an iOS Mobile Engineer position"
+  ],
+  "about": "",
+  "photo": "/api/files/careerfolio/images/4a575dab-fee1-468b-a025-39ddc86f70f0.jpg",
+  "hero_image": "",
+  "email": "bharathi91m@gmail.com",
+  "phone": "+91 9585483215",
+  "location": "",
+  "linkedin": "https://www.linkedin.com/in/bharathi91",
+  "github": "https://github.com/bharathi91",
+  "website": "",
+  "availability": "",
+  "interests": [],
+  "additional_info": ""
+ },
+ "theme": {
+  "light": {
+   "primary": "#E8492A",
+   "secondary": "#E9E4D9",
+   "accent": "#1D3BFF",
+   "background": "#F4F1EA",
+   "text": "#15130F"
+  },
+  "dark": {
+   "primary": "#FF6A3D",
+   "secondary": "#1C1B19",
+   "accent": "#7C8CFF",
+   "background": "#0B0B0A",
+   "text": "#EFECE5"
+  },
+  "font_heading": "Cabinet Grotesk",
+  "font_body": "Satoshi",
+  "font_size": 16,
+  "radius": 1.25,
+  "section_spacing": "normal",
+  "button_style": "pill",
+  "card_style": "bordered",
+  "default_mode": "light",
+  "allow_toggle": true
+ },
+ "seo": {
+  "title": "Bharathi Kumar N \u2014 iOS Mobile Engineer",
+  "description": "Senior iOS developer with 10 years of experience in Swift and Objective-C. MoneyGram, Dubai Culture, Sentara and more.",
+  "keywords": "iOS developer, Swift, SwiftUI, Objective-C, MVVM, mobile engineer, Bharathi Kumar",
+  "author": "Bharathi Kumar N",
+  "canonical": "",
+  "og_image": ""
+ },
+ "site": {
+  "brand": "Bharathi Kumar - iOS Developer",
+  "marquee": [
+   "Swift",
+   "SwiftUI",
+   "Objective-C",
+   "UIKit",
+   "MVVM",
+   "Clean Architecture",
+   "Combine",
+   "CI/CD",
+   "App Store deployments",
+   "REST APIs"
+  ],
+  "footer_text": "Designed & engineered with care.",
+  "auto_publish": false,
+  "notify_on_message": true,
+  "weekly_report": true,
+  "hero_eyebrow": "Shipped to the App Store",
+  "hero_title": "Apps",
+  "hero_per_screen": 5,
+  "hero_autoplay": true,
+  "hero_interval": 4,
+  "hero_show_code": true,
+  "hero_photo_caption": "Senior iOS Developer",
+  "hero_photo_subcaption": "10 years \u00b7 Swift & Objective-C",
+  "qv_photo": true,
+  "qv_summary": true,
+  "qv_skills": true,
+  "qv_experience": true,
+  "qv_bullets": 1,
+  "qv_bullet_jobs": 4,
+  "qv_achievements": true,
+  "qv_projects": true,
+  "qv_education": true,
+  "qv_certifications": true
+ },
+ "sections": [
+  {
+   "visible": true,
+   "type": "hero",
+   "title": "Hero",
+   "eyebrow": "iOS Mobile Engineer",
+   "subtitle": "",
+   "description": "",
+   "slug": "top",
+   "layout": "default",
+   "blocks": [],
+   "id": "5ed2702b-2807-4010-8b24-e485c93e2121",
+   "order": 0,
+   "created_at": "2026-11-17T11:25:10.912835+00:00",
+   "updated_at": "2026-11-17T11:25:10.912842+00:00"
+  },
+  {
+   "visible": true,
+   "type": "about",
+   "title": "About",
+   "eyebrow": "01 \u2014 About",
+   "subtitle": "A decade of shipping native iOS apps.",
+   "description": "",
+   "slug": "about",
+   "layout": "default",
+   "blocks": [],
+   "id": "51321b2c-2e74-4cfa-a3ac-aa434a70103a",
+   "order": 1,
+   "created_at": "2026-11-17T11:25:10.913197+00:00",
+   "updated_at": "2026-11-17T11:36:32.859769+00:00"
+  },
+  {
+   "visible": true,
+   "type": "skills",
+   "title": "Toolkit",
+   "eyebrow": "02 \u2014 Skills",
+   "subtitle": "Languages, frameworks and practices I work with.",
+   "description": "",
+   "slug": "skills",
+   "layout": "default",
+   "blocks": [],
+   "id": "ce525743-90c3-42de-a036-07bb5915f9b8",
+   "order": 2,
+   "created_at": "2026-11-17T11:25:10.913477+00:00",
+   "updated_at": "2026-11-17T11:25:10.913479+00:00"
+  },
+  {
+   "visible": true,
+   "type": "experience",
+   "title": "Experience",
+   "eyebrow": "03 \u2014 Career",
+   "subtitle": "Fintech, government, healthcare and banking apps, from first commit to App Store release.",
+   "description": "",
+   "slug": "experience",
+   "layout": "default",
+   "blocks": [],
+   "id": "12a28152-a536-49e9-a066-83d3695b6e66",
+   "order": 3,
+   "created_at": "2026-11-17T11:25:10.913709+00:00",
+   "updated_at": "2026-11-17T11:25:10.913711+00:00"
+  },
+  {
+   "visible": true,
+   "type": "projects",
+   "title": "Selected Work",
+   "eyebrow": "04 \u2014 Projects",
+   "subtitle": "Apps on the App Store and open-source contributions.",
+   "description": "",
+   "slug": "projects",
+   "layout": "default",
+   "blocks": [],
+   "id": "570e5953-bc16-48da-b95f-0fc450045462",
+   "order": 4,
+   "created_at": "2026-11-17T11:25:10.913938+00:00",
+   "updated_at": "2026-11-17T11:25:10.913941+00:00"
+  },
+  {
+   "visible": true,
+   "type": "achievements",
+   "title": "Key Achievements",
+   "eyebrow": "05 \u2014 Impact",
+   "subtitle": "",
+   "description": "",
+   "slug": "achievements",
+   "layout": "default",
+   "blocks": [],
+   "id": "b9d760b8-13e7-4ced-9f02-93e1a6e88338",
+   "order": 5,
+   "created_at": "2026-11-17T11:25:10.914161+00:00",
+   "updated_at": "2026-11-17T11:25:10.914163+00:00"
+  },
+  {
+   "visible": true,
+   "type": "education",
+   "title": "Education",
+   "eyebrow": "06 \u2014 Education",
+   "subtitle": "",
+   "description": "",
+   "slug": "education",
+   "layout": "default",
+   "blocks": [],
+   "id": "eaf3081c-b454-4a74-a30e-a9d9885c4a81",
+   "order": 6,
+   "created_at": "2026-11-17T11:25:10.914394+00:00",
+   "updated_at": "2026-11-17T11:25:10.914397+00:00"
+  },
+  {
+   "visible": true,
+   "type": "quicklinks",
+   "title": "Find me online",
+   "eyebrow": "07 \u2014 Links",
+   "subtitle": "Code, writing and profiles.",
+   "description": "",
+   "slug": "links",
+   "layout": "default",
+   "blocks": [],
+   "id": "c820502d-4773-4496-b17b-acdb93e1ee32",
+   "order": 9,
+   "created_at": "2026-11-17T11:25:10.915038+00:00",
+   "updated_at": "2026-11-17T11:25:10.915040+00:00"
+  },
+  {
+   "visible": true,
+   "type": "custom",
+   "title": "Links & Resources",
+   "eyebrow": "Resources",
+   "subtitle": "Handy links \u2014 each opens in a new tab.",
+   "description": "",
+   "slug": "links-resources",
+   "layout": "default",
+   "blocks": [
+    {
+     "id": "a641deef-3f17-45aa-976e-97227add5613",
+     "type": "buttons",
+     "content": "",
+     "url": "",
+     "caption": "",
+     "links": [],
+     "buttons": [
+      {
+       "label": "GitHub",
+       "url": "https://github.com/bharathi91",
+       "bg_color": "#15130F",
+       "text_color": "#FFFFFF",
+       "new_tab": true
+      },
+      {
+       "label": "LinkedIn",
+       "url": "https://www.linkedin.com/in/bharathi91",
+       "bg_color": "#0A66C2",
+       "text_color": "#FFFFFF",
+       "new_tab": true
+      },
+      {
+       "label": "Medium",
+       "url": "https://medium.com/@codewithbharathi",
+       "bg_color": "#E8492A",
+       "text_color": "#FFFFFF",
+       "new_tab": true
+      }
+     ]
+    }
+   ],
+   "id": "63a08af4-bcdf-49d2-94a3-aa0dd5940155",
+   "order": 10,
+   "created_at": "2026-11-17T12:04:07.136559+00:00",
+   "updated_at": "2026-11-17T12:04:07.136559+00:00"
+  },
+  {
+   "visible": true,
+   "type": "contact",
+   "title": "Let's talk.",
+   "eyebrow": "08 \u2014 Contact",
+   "subtitle": "Send a message and I'll get back to you.",
+   "description": "",
+   "slug": "contact",
+   "layout": "default",
+   "blocks": [],
+   "id": "7e1a27a8-dbf2-4c19-b8a0-6ed7d55c30b9",
+   "order": 12,
+   "created_at": "2026-11-17T11:25:10.915245+00:00",
+   "updated_at": "2026-11-17T11:25:10.915247+00:00"
+  },
+  {
+   "visible": true,
+   "type": "custom",
+   "title": "Web Development Projects",
+   "eyebrow": "Links",
+   "subtitle": "Each button opens in a new tab.",
+   "description": "",
+   "slug": "more-links",
+   "layout": "default",
+   "blocks": [
+    {
+     "id": "cc674585-f466-4ada-9ec3-a874e55ea743",
+     "type": "buttons",
+     "content": "",
+     "url": "",
+     "caption": "",
+     "links": [],
+     "buttons": [
+      {
+       "label": "KR Hospital",
+       "url": "https://thenilgirissoftwares.org/",
+       "bg_color": "#24a0d6",
+       "text_color": "#FFFFFF",
+       "new_tab": true
+      },
+      {
+       "label": "DJ Hospital",
+       "url": "https://thenilgirissoftwares.net/",
+       "bg_color": "#E8492A",
+       "text_color": "#FFFFFF",
+       "new_tab": true
+      },
+      {
+       "label": "Subbu Hospital",
+       "url": "https://thenilgirissoftwares.info",
+       "bg_color": "#7d86bf",
+       "text_color": "#FFFFFF",
+       "new_tab": true
+      },
+      {
+       "label": "Savidha Hospital",
+       "url": "https://nilgirissoftware.com",
+       "bg_color": "#1c734d",
+       "text_color": "#FFFFFF",
+       "new_tab": true
+      }
+     ]
+    }
+   ],
+   "id": "2caf6e89-e0c2-4fcb-8b75-f85d9f548035",
+   "order": 13,
+   "created_at": "2026-11-17T12:30:09.393633+00:00",
+   "updated_at": "2026-11-18T18:13:44.356651+00:00"
+  }
+ ],
+ "skills": [
+  {
+   "visible": true,
+   "title": "Languages & Frameworks",
+   "description": "",
+   "items": [
+    "Swift",
+    "SwiftUI",
+    "Objective-C",
+    "MVVM",
+    "MVC",
+    "Clean Architecture",
+    "Combine"
+   ],
+   "icon": "Code2",
+   "id": "a0cab4b2-5f66-4b6f-868b-50c7f8e6f69c",
+   "order": 0,
+   "created_at": "2026-11-17T11:25:10.915688+00:00",
+   "updated_at": "2026-11-17T11:25:10.915691+00:00"
+  },
+  {
+   "visible": true,
+   "title": "Tools & Technologies",
+   "description": "",
+   "items": [
+    "Firebase",
+    "Dynatrace",
+    "NewRelic",
+    "Git",
+    "JIRA",
+    "Version Control",
+    "CI/CD",
+    "App Store deployments",
+    "REST APIs",
+    "Third-party SDKs"
+   ],
+   "icon": "Terminal",
+   "id": "a053264b-5209-48d8-8f9f-4910695f2a5a",
+   "order": 1,
+   "created_at": "2026-11-17T11:25:10.915956+00:00",
+   "updated_at": "2026-11-17T11:25:10.915960+00:00"
+  },
+  {
+   "visible": true,
+   "title": "Methodologies & Practices",
+   "description": "",
+   "items": [
+    "Agile practices",
+    "Technical design",
+    "Architecture discussions",
+    "Sprint planning",
+    "Code reviews",
+    "Performance optimization",
+    "Debugging",
+    "Refactoring",
+    "Mentoring",
+    "Unit testing",
+    "Problem-Solving",
+    "Attention to Detail",
+    "Continuous Learning",
+    "Creativity"
+   ],
+   "icon": "Layers",
+   "id": "803cb9a1-b871-4dee-89e9-3f61456a23d4",
+   "order": 2,
+   "created_at": "2026-11-17T11:25:10.916206+00:00",
+   "updated_at": "2026-11-17T11:25:10.916209+00:00"
+  },
+  {
+   "visible": true,
+   "title": "Soft Skills",
+   "description": "",
+   "items": [
+    "Critical analysis",
+    "Multitasking efficiency",
+    "Written and verbal communication",
+    "Objective-C proficient",
+    "Grand central dispatch knowledge"
+   ],
+   "icon": "Sparkles",
+   "id": "296bb3cb-0f0e-469a-862f-70c1724d0df0",
+   "order": 3,
+   "created_at": "2026-11-17T11:25:10.916458+00:00",
+   "updated_at": "2026-11-17T11:25:10.916460+00:00"
+  }
+ ],
+ "experiences": [
+  {
+   "visible": true,
+   "company": "SMI Technology LLC",
+   "role": "Senior iOS developer",
+   "start": "01/2026",
+   "end": "Present",
+   "location": "Remote",
+   "summary": "Dubai Culture, Dubai Public Library",
+   "bullets": [
+    "Led the design, development, and maintenance of the Dubai Culture and Dubai Public Library iOS applications for the Dubai Government's Arts & Culture Authority using Swift, UIKit, and the MVVM architecture pattern.",
+    "Managed and mentored iOS developers, conducted code reviews, and drove technical design decisions to deliver secure, scalable, and high-quality mobile applications.",
+    "Collaborated with product owners, UI/UX designers, backend engineers, and QA teams to implement new features, integrate REST APIs and third-party SDKs, and ensure timely project delivery.",
+    "Enhanced application performance, stability, and user experience (UX) through performance optimization, debugging, refactoring, and continuous enhancements.",
+    "Managed the complete release lifecycle, including CI/CD, App Store deployments, production support, agile sprint planning, and release management."
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM"
+   ],
+   "logo": "",
+   "url": "",
+   "id": "0ce1bb68-6682-49ed-93fa-d3a3cf8952ad",
+   "order": 0,
+   "created_at": "2026-11-17T11:25:10.916928+00:00",
+   "updated_at": "2026-11-17T11:25:10.916930+00:00"
+  },
+  {
+   "visible": true,
+   "company": "Spearhead Technology India Private Limited",
+   "role": "Senior iOS developer",
+   "start": "02/2024",
+   "end": "05/2025",
+   "location": "Remote",
+   "summary": "MoneyGram",
+   "bullets": [
+    "Developed for MoneyGram's iOS App, a Fintech and Digital Money Transfer platform serving global customers.",
+    "Developed and maintained secure, high-performance native iOS applications using Swift, UIKit, and the MVVM architecture pattern within a large Agile engineering team.",
+    "Collaborated with product managers, solution architects, backend engineers, QA engineers, and UI/UX designers to deliver scalable features, seamless user experiences, and high-quality releases.",
+    "Implemented secure authentication, payment flows, money transfer features, REST API integrations, and third-party SDKs while following coding standards and iOS best practices.",
+    "Boosted app performance, stability, and maintainability via optimization, debugging, refactoring, reviews, and mentoring.",
+    "Contributed to sprint planning, technical design discussions, CI/CD, App Store releases, and production support, ensuring timely delivery of reliable mobile applications."
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM",
+    "Fintech"
+   ],
+   "logo": "",
+   "url": "",
+   "id": "130b296b-9b53-4d63-98bf-aabfab0b89fc",
+   "order": 1,
+   "created_at": "2026-11-17T11:25:10.917286+00:00",
+   "updated_at": "2026-11-17T11:25:10.917288+00:00"
+  },
+  {
+   "visible": true,
+   "company": "Publicis Sapient",
+   "role": "Senior Developer Mobile Solutions, Level 2",
+   "start": "06/2022",
+   "end": "12/2023",
+   "location": "Remote",
+   "summary": "Banking Application",
+   "bullets": [
+    "Developed and maintained secure, high-performance iOS banking applications using Swift, UIKit, and MVVM within a large Agile engineering team.",
+    "Collaborated with product owners, architects, backend engineers, QA, and security teams to design and deliver scalable, business-critical banking solutions.",
+    "Implemented secure features including user authentication, account management, fund transfers, bill payments, payment gateway integration, transaction history, REST APIs, and third-party SDK integrations.",
+    "Improved application performance, stability, and code quality through code reviews, performance optimization, debugging, and refactoring while following iOS best practices.",
+    "Participated in technical design, architecture discussions, sprint planning, and mentored junior developers to ensure high-quality deliverables.",
+    "Supported the complete release lifecycle, including CI/CD, App Store releases, production support, and timely resolution of critical production issues."
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM",
+    "Banking"
+   ],
+   "logo": "",
+   "url": "",
+   "id": "e2bf1df1-d109-4de1-a75f-286a137bd54c",
+   "order": 2,
+   "created_at": "2026-11-17T11:25:10.917541+00:00",
+   "updated_at": "2026-11-17T11:25:10.917543+00:00"
+  },
+  {
+   "visible": true,
+   "company": "Photon Interactive Pvt Ltd",
+   "role": "Senior Software Engineer",
+   "start": "01/2021",
+   "end": "06/2022",
+   "location": "Remote",
+   "summary": "Sentara & Optima Health",
+   "bullets": [
+    "Developed and maintained the Sentara and Optima Health native iOS applications, delivering secure, scalable, and high-performance healthcare solutions using Swift, UIKit, and MVVM.",
+    "Collaborated with product owners, clinicians, backend engineers, QA, and UX designers to implement patient-centric features, ensuring compliance with healthcare standards and best practices.",
+    "Designed and enhanced core functionalities, including appointment scheduling, patient records, telehealth, provider search, secure messaging, notifications, and REST API integrations.",
+    "Improved application performance, stability, and user experience through code optimization, debugging, refactoring, code reviews, and mentoring junior developers.",
+    "Contributed to Agile development, technical design, release planning, App Store deployments, CI/CD, and production support, ensuring reliable and timely delivery of healthcare applications."
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM",
+    "Healthcare"
+   ],
+   "logo": "",
+   "url": "",
+   "id": "f2a18d03-d9c3-4a6b-9f39-479f5ca6af8b",
+   "order": 3,
+   "created_at": "2026-11-17T11:25:10.917754+00:00",
+   "updated_at": "2026-11-17T11:25:10.917756+00:00"
+  },
+  {
+   "visible": true,
+   "company": "App Innovation Technologies",
+   "role": "Lead iOS Developer",
+   "start": "08/2019",
+   "end": "01/2021",
+   "location": "Remote",
+   "summary": "IDPal & PaceUP!",
+   "bullets": [
+    "Led the design, development, and successful delivery of the IDPal and PaceUP! Native iOS applications, managing a team of iOS developers and ensuring high-quality releases.",
+    "Collaborated with clients, product owners, designers, and engineering teams to gather requirements, perform technical feasibility analysis, design scalable solutions, and drive project execution.",
+    "Reviewed client requirements and led the architecture, design, and implementation of 5+ complex iOS applications using Swift, UIKit, and industry best practices.",
+    "Improved product quality through code reviews, mentoring developers, unit testing, and enforcing coding standards to deliver maintainable and reliable applications.",
+    "Stayed current with emerging iOS technologies, frameworks, and Apple platform updates, driving the adoption of modern development practices across the team."
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "Team Lead"
+   ],
+   "logo": "",
+   "url": "",
+   "id": "3927be8d-2d40-41f2-8e02-2ef8d935df06",
+   "order": 4,
+   "created_at": "2026-11-17T11:25:10.917980+00:00",
+   "updated_at": "2026-11-17T11:25:10.917982+00:00"
+  },
+  {
+   "visible": true,
+   "company": "CoStrategix Technologies Private Limited",
+   "role": "Software Analyst",
+   "start": "04/2016",
+   "end": "08/2017",
+   "location": "Remote",
+   "summary": "GolfApp",
+   "bullets": [
+    "Developed applications using Xcode, Swift, Interface Builder, Cocoa Touch, Instruments, and other iOS development tools.",
+    "Developed and maintained the GolfApp native iOS application using Swift, UIKit, Xcode, Interface Builder, Cocoa Touch, and Instruments, delivering high-quality and performant mobile solutions.",
+    "Served as a senior member of the iOS team, collaborating closely with product managers, designers, backend engineers, QA teams, and stakeholders to deliver business requirements.",
+    "Designed and implemented new features, integrated REST APIs and third-party SDKs, and resolved complex technical challenges while following iOS best practices.",
+    "Improved application performance, stability, and code quality through code reviews, debugging, performance optimization, and mentoring junior developers.",
+    "Accelerated delivery via collaboration, Agile practices, and modern iOS tools. Enabled faster cycles and superior product quality."
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "Cocoa Touch"
+   ],
+   "logo": "",
+   "url": "",
+   "id": "cd120bce-7ef3-4ee3-92b1-2f2b63327977",
+   "order": 5,
+   "created_at": "2026-11-17T11:25:10.918547+00:00",
+   "updated_at": "2026-11-17T11:25:10.918552+00:00"
+  },
+  {
+   "visible": true,
+   "company": "Tatya Global Pvt Ltd",
+   "role": "Software Engineer",
+   "start": "08/2015",
+   "end": "04/2016",
+   "location": "Remote",
+   "summary": "Trackyfy",
+   "bullets": [
+    "Improved iOS user engagement by 15% by collaborating with product manager and designers to enhance user experience.",
+    "Sole iOS developer responsible for designing, developing, and delivering the Trackyfy GPS tracking application from scratch using Objective C and UIKit.",
+    "Gathered requirements directly from stakeholders, translated business needs into scalable technical solutions, and owned the complete application architecture and development lifecycle.",
+    "Implemented core GPS features, including real-time location tracking, maps integration, route visualization, geo-fencing, and background location updates.",
+    "Integrated REST APIs, optimized application performance, and ensured a reliable, responsive, and user-friendly experience across iOS devices.",
+    "Managed testing, App Store releases, production support, bug fixes, and continuous feature enhancements while collaborating closely with stakeholders throughout the project.",
+    "Explored new technologies and shared findings with the team."
+   ],
+   "tags": [
+    "Objective-C",
+    "UIKit",
+    "GPS"
+   ],
+   "logo": "",
+   "url": "",
+   "id": "e967bd01-0a44-493e-8615-332890982adf",
+   "order": 6,
+   "created_at": "2026-11-17T11:25:10.918885+00:00",
+   "updated_at": "2026-11-17T11:25:10.918888+00:00"
+  },
+  {
+   "visible": true,
+   "company": "Compindia infotech Pvt Ltd",
+   "role": "Mobile developer, Level2",
+   "start": "03/2014",
+   "end": "08/2015",
+   "location": "Remote",
+   "summary": "",
+   "bullets": [
+    "Assisting the lead developers in the analyzing, designing, developing, and optimizing performance of iOS applications.",
+    "Learned native iOS application development from scratch using Swift, UIKit, Xcode, and Apple's development frameworks under the guidance of senior developers.",
+    "Assisted senior iOS developers in analyzing requirements, developing new features, fixing bugs, and optimizing application performance.",
+    "Collaborated with QA engineers, product managers, and development teams to test, debug, and continuously improve application quality.",
+    "Participated in code reviews, learned iOS development best practices, version control, and Agile development processes.",
+    "Partnering thoroughly with QA, product management, and the development team members to improve the apps constantly."
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "Xcode"
+   ],
+   "logo": "",
+   "url": "",
+   "id": "33e7280c-5be7-4def-8c82-67ece16a2172",
+   "order": 7,
+   "created_at": "2026-11-17T11:25:10.919137+00:00",
+   "updated_at": "2026-11-17T11:25:10.919139+00:00"
+  }
+ ],
+ "projects": [
+  {
+   "visible": true,
+   "title": "MoneyGram",
+   "category": "Fintech",
+   "description": "Fintech and Digital Money Transfer platform serving global customers.",
+   "bullets": [
+    "Secure sign-in and authentication",
+    "Payment flows and money transfer features",
+    "REST API and third-party SDK integrations",
+    "Native Swift and UIKit app on the MVVM architecture"
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM"
+   ],
+   "image": "",
+   "link": "https://apps.apple.com/us/app/moneygram-money-transfers-app/id867619606",
+   "link_label": "App Store",
+   "repo": "",
+   "featured": true,
+   "id": "b5447c71-989d-4815-b7f1-0f8a0ffc45e6",
+   "order": 0,
+   "created_at": "2026-11-17T11:25:10.919742+00:00",
+   "updated_at": "2026-11-17T14:47:22.736886+00:00",
+   "icon": "/api/files/careerfolio/images/14e695d7-43c7-4a49-8d45-ee950dce1b2a.jpg",
+   "screenshots": [
+    "/api/files/careerfolio/images/f40d9c6b-71cd-47b0-a365-a888b683d9b4.jpg",
+    "/api/files/careerfolio/images/45138cee-36d9-41e7-8f15-4677c04a9943.jpg",
+    "/api/files/careerfolio/images/bb38202c-4c5e-431c-bd86-2e656b8c9aaa.jpg"
+   ],
+   "in_hero": true,
+   "app_store": "",
+   "challenges": "Delivering secure authentication, payment flows and money transfer features for a fintech platform serving global customers, inside a large Agile team of product managers, solution architects, backend, QA and UI/UX engineers.",
+   "play_store": "",
+   "results": "Scalable features and high-quality App Store releases, plus better app performance, stability and maintainability through optimisation, debugging, refactoring, code reviews and mentoring.",
+   "role": ""
+  },
+  {
+   "visible": true,
+   "title": "Dubai Culture",
+   "category": "Government \u00b7 Arts & Culture",
+   "description": "iOS application for the Dubai Government's Arts & Culture Authority.",
+   "bullets": [
+    "New features built with product owners, UI/UX designers, backend engineers and QA",
+    "REST API and third-party SDK integrations",
+    "Native Swift and UIKit app on the MVVM architecture",
+    "CI/CD, App Store deployments and release management"
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM"
+   ],
+   "image": "",
+   "link": "https://apps.apple.com/in/app/dubai-culture-%D8%AF%D8%A8%D9%8A-%D9%84%D9%84%D8%AB%D9%82%D8%A7%D9%81%D8%A9/id926793557",
+   "link_label": "App Store",
+   "repo": "",
+   "featured": false,
+   "id": "da677d8c-cfd5-46fe-b202-f9d33ec160b3",
+   "order": 1,
+   "created_at": "2026-11-17T11:25:10.920110+00:00",
+   "updated_at": "2026-11-17T14:47:22.736886+00:00",
+   "icon": "/api/files/careerfolio/images/721d9c4b-b6ee-4d80-9f1a-369d6ddbc8ea.jpg",
+   "screenshots": [
+    "/api/files/careerfolio/images/01ab642e-fe63-4dd1-8534-429608886359.png",
+    "/api/files/careerfolio/images/fed08e68-aef0-4977-bec3-9118d8233f77.jpg",
+    "/api/files/careerfolio/images/bbd3f9a9-0224-43b1-8d63-8dd5e5f581a6.jpg"
+   ],
+   "in_hero": true,
+   "challenges": "Leading the design, development and maintenance of an iOS app for the Dubai Government's Arts & Culture Authority, while managing and mentoring iOS developers and owning the complete release lifecycle.",
+   "results": "A secure, scalable app with improved performance, stability and user experience, backed by code reviews, technical design decisions and well-managed CI/CD and App Store releases."
+  },
+  {
+   "visible": true,
+   "title": "Dubai Public Library",
+   "category": "Government \u00b7 Library",
+   "description": "iOS application for the Dubai Government's Arts & Culture Authority.",
+   "bullets": [
+    "New features built with product owners, UI/UX designers, backend engineers and QA",
+    "REST API and third-party SDK integrations",
+    "Native Swift and UIKit app on the MVVM architecture",
+    "CI/CD, App Store deployments and release management"
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM"
+   ],
+   "image": "",
+   "link": "https://apps.apple.com/in/app/dubai-library-%D9%85%D9%83%D8%AA%D8%A8%D8%A9-%D8%AF%D8%A8%D9%8A/id921365930",
+   "link_label": "App Store",
+   "repo": "",
+   "featured": false,
+   "id": "5cb75b45-562a-46f2-a88a-e8150cb85163",
+   "order": 2,
+   "created_at": "2026-11-17T11:25:10.920356+00:00",
+   "updated_at": "2026-11-17T14:47:22.736886+00:00",
+   "icon": "/api/files/careerfolio/images/706a89c3-70f8-4c10-a672-d3f21fff2d67.jpg",
+   "screenshots": [
+    "/api/files/careerfolio/images/338a2161-e6c6-4902-8c66-7460b2f49158.png",
+    "/api/files/careerfolio/images/0fd9a3b2-ff8f-4cb7-a309-e0c1ed607567.png",
+    "/api/files/careerfolio/images/2a316c22-186a-4faa-a57a-92247b16cedb.png"
+   ],
+   "in_hero": true,
+   "challenges": "Leading the design, development and maintenance of an iOS app for the Dubai Government's Arts & Culture Authority, while managing and mentoring iOS developers and owning the complete release lifecycle.",
+   "results": "A secure, scalable app with improved performance, stability and user experience, backed by code reviews, technical design decisions and well-managed CI/CD and App Store releases."
+  },
+  {
+   "visible": true,
+   "title": "Sentara",
+   "category": "Healthcare",
+   "description": "Healthcare iOS application.",
+   "bullets": [
+    "Appointment scheduling",
+    "Patient records",
+    "Telehealth",
+    "Provider search",
+    "Secure messaging and notifications",
+    "REST API integrations"
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM"
+   ],
+   "image": "",
+   "link": "https://apps.apple.com/us/app/sentara/id490172455",
+   "link_label": "App Store",
+   "repo": "",
+   "featured": false,
+   "id": "a4bdc213-8abe-4734-a37f-ea362c4e33ce",
+   "order": 3,
+   "created_at": "2026-11-17T11:25:10.920598+00:00",
+   "updated_at": "2026-11-17T14:47:22.736886+00:00",
+   "icon": "/api/files/careerfolio/images/3b1c9dfb-eb6c-45e5-ad29-c3ee9d68646c.jpg",
+   "screenshots": [
+    "/api/files/careerfolio/images/c2e52b07-8aae-42a4-902b-61f4c0f8b23c.png",
+    "/api/files/careerfolio/images/e12da626-dcf8-452d-b918-9b70a52c5313.png",
+    "/api/files/careerfolio/images/f91f7e69-01da-49ca-b0ce-30a03d60aa23.png"
+   ],
+   "in_hero": true,
+   "challenges": "Building patient-centric healthcare features together with product owners, clinicians, backend engineers, QA and UX designers, while staying compliant with healthcare standards and best practices.",
+   "results": "Secure, scalable and high-performance healthcare releases, with better stability and user experience through code optimisation, refactoring, code reviews and mentoring junior developers."
+  },
+  {
+   "visible": true,
+   "title": "Optima Health",
+   "category": "Healthcare",
+   "description": "Healthcare iOS application.",
+   "bullets": [
+    "Appointment scheduling",
+    "Patient records",
+    "Telehealth",
+    "Provider search",
+    "Secure messaging and notifications",
+    "REST API integrations"
+   ],
+   "tags": [
+    "Swift",
+    "UIKit",
+    "MVVM"
+   ],
+   "image": "",
+   "link": "https://apps.apple.com/us/app/optima-health/id853146367",
+   "link_label": "App Store",
+   "repo": "",
+   "featured": true,
+   "id": "61af8bd8-e5bd-4b50-bb1d-9d48a5d1bbf4",
+   "order": 4,
+   "created_at": "2026-11-17T11:25:10.920810+00:00",
+   "updated_at": "2026-11-17T14:47:22.736886+00:00",
+   "icon": "/api/files/careerfolio/images/6d10c673-f7e6-4fb9-829f-be4455e59ae0.jpg",
+   "screenshots": [
+    "/api/files/careerfolio/images/83276d60-900f-4c88-8550-abac9520a5d5.png",
+    "/api/files/careerfolio/images/2e1a962f-d72b-40d6-ae15-5f9620b055dc.png",
+    "/api/files/careerfolio/images/aa537c90-40a3-42a6-8ec5-99f204dcaf95.png"
+   ],
+   "in_hero": true,
+   "challenges": "Building patient-centric healthcare features together with product owners, clinicians, backend engineers, QA and UX designers, while staying compliant with healthcare standards and best practices.",
+   "results": "Secure, scalable and high-performance healthcare releases, with better stability and user experience through code optimisation, refactoring, code reviews and mentoring junior developers."
+  },
+  {
+   "visible": true,
+   "title": "ID Pal",
+   "category": "iOS App",
+   "description": "",
+   "bullets": [
+    "Architecture, design and implementation in Swift and UIKit",
+    "Requirements gathering and technical feasibility analysis with the client",
+    "Unit testing and enforced coding standards",
+    "Code reviews and developer mentoring"
+   ],
+   "tags": [
+    "Swift",
+    "UIKit"
+   ],
+   "image": "",
+   "link": "https://apps.apple.com/ie/app/id-pal/id1123152331",
+   "link_label": "App Store",
+   "repo": "",
+   "featured": false,
+   "id": "ee6ac7d2-bb41-43ec-a894-bb5bbe4e29ca",
+   "order": 5,
+   "created_at": "2026-11-17T11:25:10.921019+00:00",
+   "updated_at": "2026-11-17T14:47:22.736886+00:00",
+   "icon": "/api/files/careerfolio/images/09b846e6-7635-4b07-9066-b0d31dbed84e.jpg",
+   "screenshots": [
+    "/api/files/careerfolio/images/c6feff95-3dce-491d-b618-0886b85ba3a7.png",
+    "/api/files/careerfolio/images/99147f39-3de7-4a26-bdf4-eeb43e2d8e60.png",
+    "/api/files/careerfolio/images/bb8b93f3-ef0c-4447-8502-65dda7aa319c.png"
+   ],
+   "in_hero": true,
+   "challenges": "Turning client requirements into a scalable native iOS design: gathering requirements, running technical feasibility analysis and driving execution while managing a team of iOS developers.",
+   "results": "Successful delivery with high-quality releases, and product quality raised through code reviews, mentoring, unit testing and consistent coding standards."
+  },
+  {
+   "visible": true,
+   "title": "PaceUP!",
+   "category": "iOS App",
+   "description": "",
+   "bullets": [
+    "Architecture, design and implementation in Swift and UIKit",
+    "Requirements gathering and technical feasibility analysis with the client",
+    "Unit testing and enforced coding standards",
+    "Code reviews and developer mentoring"
+   ],
+   "tags": [
+    "Swift",
+    "UIKit"
+   ],
+   "image": "",
+   "link": "https://apps.apple.com/us/app/paceup/id1188739081",
+   "link_label": "App Store",
+   "repo": "",
+   "featured": false,
+   "id": "29aca32c-2885-42dd-a797-48e316652ea6",
+   "order": 6,
+   "created_at": "2026-11-17T11:25:10.921223+00:00",
+   "updated_at": "2026-11-17T14:47:22.736886+00:00",
+   "icon": "/api/files/careerfolio/images/cfa81c55-9462-4304-84fa-fe253385d136.jpg",
+   "screenshots": [
+    "/api/files/careerfolio/images/8da64606-bac9-4c1e-9671-d926f133d39e.png",
+    "/api/files/careerfolio/images/35c470b5-56d1-44f9-8feb-e42cab898eae.png",
+    "/api/files/careerfolio/images/f34caa70-1698-4c11-9548-244ff0ddf245.png"
+   ],
+   "in_hero": true,
+   "challenges": "Turning client requirements into a scalable native iOS design: gathering requirements, running technical feasibility analysis and driving execution while managing a team of iOS developers.",
+   "results": "Successful delivery with high-quality releases, and product quality raised through code reviews, mentoring, unit testing and consistent coding standards."
+  },
+  {
+   "visible": true,
+   "title": "CallProof",
+   "category": "iOS App",
+   "description": "",
+   "bullets": [],
+   "tags": [],
+   "image": "",
+   "link": "https://apps.apple.com/us/app/callproof-crm/id545096552",
+   "link_label": "App Store",
+   "repo": "",
+   "featured": false,
+   "id": "e54f041d-3680-4bf8-9f6a-b45a2fa40e0f",
+   "order": 7,
+   "created_at": "2026-11-17T11:25:10.921454+00:00",
+   "updated_at": "2026-11-17T11:25:10.921456+00:00",
+   "in_hero": true,
+   "icon": "/api/files/careerfolio/images/f85c6974-6226-4e37-b493-630e93755b30.jpg",
+   "screenshots": [
+    "/api/files/careerfolio/images/845ef9f8-2eae-4920-9c61-b2e719d735f3.png",
+    "/api/files/careerfolio/images/c3c2c0b5-e631-4a8c-abf9-da08f10b38f7.png",
+    "/api/files/careerfolio/images/5eaf5168-a0e9-43f1-928e-dc98a52e3f10.png"
+   ]
+  },
+  {
+   "visible": true,
+   "title": "Strongbox",
+   "category": "Open Source",
+   "description": "Contribution to the open-source Strongbox iOS library.",
+   "bullets": [],
+   "tags": [
+    "Open Source"
+   ],
+   "image": "",
+   "link": "https://github.com/granoff/Strongbox",
+   "link_label": "GitHub",
+   "repo": "",
+   "featured": false,
+   "id": "78ff9030-d067-43ea-8aad-d3a70d9c88bd",
+   "order": 8,
+   "created_at": "2026-11-17T11:25:10.921670+00:00",
+   "updated_at": "2026-11-17T14:47:22.736886+00:00",
+   "in_hero": false,
+   "results": "Received the GitHub Code Vault Contributor badge for contributing to the open-source Strongbox iOS library."
+  },
+  {
+   "visible": true,
+   "title": "Next-Level Localization",
+   "category": "Open Source",
+   "description": "",
+   "bullets": [],
+   "tags": [
+    "Open Source"
+   ],
+   "image": "",
+   "link": "https://github.com/bharathi91/NextLevelLocalization",
+   "link_label": "GitHub",
+   "repo": "",
+   "featured": false,
+   "id": "f761b305-734f-4f99-a8ef-e13c8b1c5761",
+   "order": 9,
+   "created_at": "2026-11-17T11:25:10.921964+00:00",
+   "updated_at": "2026-11-17T11:25:10.921966+00:00",
+   "in_hero": false
+  },
+  {
+   "visible": true,
+   "title": "BK Stepper Slider",
+   "category": "Open Source",
+   "description": "",
+   "bullets": [],
+   "tags": [
+    "Open Source"
+   ],
+   "image": "",
+   "link": "https://github.com/bharathi91/BKStepperProgress",
+   "link_label": "GitHub",
+   "repo": "",
+   "featured": false,
+   "id": "5b5eff4b-5680-4e48-a9c5-43461e5a9420",
+   "order": 10,
+   "created_at": "2026-11-17T11:25:10.922178+00:00",
+   "updated_at": "2026-11-17T11:25:10.922180+00:00",
+   "in_hero": false
+  },
+  {
+   "visible": true,
+   "title": "Drag View",
+   "category": "Open Source",
+   "description": "",
+   "bullets": [],
+   "tags": [
+    "Open Source"
+   ],
+   "image": "",
+   "link": "https://github.com/bharathi91/dragView",
+   "link_label": "GitHub",
+   "repo": "",
+   "featured": false,
+   "id": "c9eb67b6-4d7d-41d5-9310-b1294bf3a663",
+   "order": 11,
+   "created_at": "2026-11-17T11:25:10.922396+00:00",
+   "updated_at": "2026-11-17T11:25:10.922398+00:00",
+   "in_hero": false
+  }
+ ],
+ "education": [
+  {
+   "visible": true,
+   "institution": "Sri Ramakrishna Engineering College",
+   "degree": "B.Tech",
+   "field": "",
+   "start": "",
+   "end": "05/2013",
+   "location": "",
+   "description": "",
+   "id": "8bedb595-b7f8-46c0-8215-ab8b802f0e08",
+   "order": 0,
+   "created_at": "2026-11-17T11:25:10.923032+00:00",
+   "updated_at": "2026-11-17T11:25:10.923036+00:00"
+  }
+ ],
+ "certifications": [],
+ "achievements": [
+  {
+   "visible": true,
+   "title": "Collaborated with Teams",
+   "metric": "10+",
+   "description": "Collaborated with cross-functional teams to complete 10+ iOS apps launches ahead of schedule.",
+   "icon": "Rocket",
+   "id": "618ec012-0183-4b50-a0af-87ce950e7275",
+   "order": 0,
+   "created_at": "2026-11-17T11:25:10.923746+00:00",
+   "updated_at": "2026-11-17T11:25:10.923749+00:00"
+  },
+  {
+   "visible": true,
+   "title": "Mobile Architecture Patterns",
+   "metric": "30%",
+   "description": "Increased app performance by 30% by implementing architecture patterns in 4 mobile projects.",
+   "icon": "Zap",
+   "id": "02f74d07-5c5d-4032-bd04-a75fe304121e",
+   "order": 1,
+   "created_at": "2026-11-17T11:25:10.924002+00:00",
+   "updated_at": "2026-11-17T11:25:10.924004+00:00"
+  },
+  {
+   "visible": true,
+   "title": "Team Leadership Excellence",
+   "metric": "4",
+   "description": "Led teams in delivering 4 iOS applications, improving quality through consistent coding standards enforcement.",
+   "icon": "Trophy",
+   "id": "e05d2335-d8ab-49ef-bf41-2cdd5f78b3ed",
+   "order": 2,
+   "created_at": "2026-11-17T11:25:10.924285+00:00",
+   "updated_at": "2026-11-17T11:25:10.924287+00:00"
+  },
+  {
+   "visible": true,
+   "title": "Open Source Contributions",
+   "metric": "",
+   "description": "Received the GitHub Code Vault Contributor badge for contributing to the open-source Strongbox iOS library, demonstrating active involvement in the iOS developer community and collaborative software development.",
+   "icon": "Github",
+   "id": "e5f7922e-0321-4e33-9dfb-e074ee2dc77b",
+   "order": 3,
+   "created_at": "2026-11-17T11:25:10.924512+00:00",
+   "updated_at": "2026-11-17T11:25:10.924514+00:00"
+  }
+ ],
+ "nav_items": [
+  {
+   "visible": true,
+   "label": "About",
+   "href": "#about",
+   "new_tab": false,
+   "id": "4ac2e2fa-befd-4c5d-a351-bb26075c3220",
+   "order": 0,
+   "created_at": "2026-11-17T11:25:10.924922+00:00",
+   "updated_at": "2026-11-17T11:25:10.924924+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Skills",
+   "href": "#skills",
+   "new_tab": false,
+   "id": "41e38aa6-f0eb-463d-a6c5-fb8b309fc2dd",
+   "order": 1,
+   "created_at": "2026-11-17T11:25:10.925160+00:00",
+   "updated_at": "2026-11-17T11:25:10.925162+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Experience",
+   "href": "#experience",
+   "new_tab": false,
+   "id": "18a03a0a-9695-4782-8e9f-20aa1ca6afb3",
+   "order": 2,
+   "created_at": "2026-11-17T11:25:10.925374+00:00",
+   "updated_at": "2026-11-17T11:25:10.925376+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Work",
+   "href": "#projects",
+   "new_tab": false,
+   "id": "4a67e397-fd60-4864-bd68-d02eac00b494",
+   "order": 3,
+   "created_at": "2026-11-17T11:25:10.925563+00:00",
+   "updated_at": "2026-11-17T11:25:10.925565+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Contact",
+   "href": "#contact",
+   "new_tab": false,
+   "id": "b6725119-ae6a-42bf-ba59-e2edb4b3363d",
+   "order": 4,
+   "created_at": "2026-11-17T11:25:10.925752+00:00",
+   "updated_at": "2026-11-17T11:25:10.925754+00:00"
+  }
+ ],
+ "buttons": [
+  {
+   "visible": true,
+   "label": "Let's talk",
+   "description": "",
+   "url": "#contact",
+   "new_tab": false,
+   "icon": "ArrowUpRight",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "pill",
+   "size": "sm",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "header"
+   ],
+   "id": "a7526b13-7bd5-47fe-bfcf-c67e9afcbd52",
+   "order": 0,
+   "created_at": "2026-11-17T11:25:10.926181+00:00",
+   "updated_at": "2026-11-17T11:25:10.926183+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Download R\u00e9sum\u00e9",
+   "description": "PDF r\u00e9sum\u00e9",
+   "url": "resume",
+   "new_tab": true,
+   "icon": "Download",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "primary",
+   "size": "md",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "hero",
+    "quicklinks"
+   ],
+   "id": "612f36cb-f0a0-44c2-a329-34e31ac377b1",
+   "order": 1,
+   "created_at": "2026-11-17T11:25:10.926447+00:00",
+   "updated_at": "2026-11-17T11:25:10.926449+00:00"
+  },
+  {
+   "visible": true,
+   "label": "View my work",
+   "description": "",
+   "url": "#projects",
+   "new_tab": false,
+   "icon": "ArrowRight",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "outline",
+   "size": "md",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "hero",
+    "summary"
+   ],
+   "id": "9e8d092f-dbfe-4399-b9c1-c1d5f2c01216",
+   "order": 2,
+   "created_at": "2026-11-17T11:25:10.926670+00:00",
+   "updated_at": "2026-11-17T11:25:10.926672+00:00"
+  },
+  {
+   "visible": true,
+   "label": "LinkedIn",
+   "description": "",
+   "url": "https://www.linkedin.com/in/bharathi91",
+   "new_tab": true,
+   "icon": "Linkedin",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "outline",
+   "size": "md",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "quicklinks",
+    "contact",
+    "footer"
+   ],
+   "id": "d61ccd0d-7162-4281-8c28-782d33df1ef5",
+   "order": 3,
+   "created_at": "2026-11-17T11:25:10.926915+00:00",
+   "updated_at": "2026-11-17T11:25:10.926917+00:00"
+  },
+  {
+   "visible": true,
+   "label": "GitHub",
+   "description": "",
+   "url": "https://github.com/bharathi91",
+   "new_tab": true,
+   "icon": "Github",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "outline",
+   "size": "md",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "quicklinks",
+    "contact",
+    "footer"
+   ],
+   "id": "3d392431-930a-46fd-a30e-60277be47774",
+   "order": 4,
+   "created_at": "2026-11-17T11:25:10.927175+00:00",
+   "updated_at": "2026-11-17T11:25:10.927178+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Stack Overflow",
+   "description": "",
+   "url": "https://stackoverflow.com/users/3480944/bharathi-kumar",
+   "new_tab": true,
+   "icon": "Layers",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "outline",
+   "size": "md",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "quicklinks",
+    "footer"
+   ],
+   "id": "62a56674-9802-42ca-84a8-1129223579ce",
+   "order": 5,
+   "created_at": "2026-11-17T11:25:10.927414+00:00",
+   "updated_at": "2026-11-17T11:25:10.927417+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Medium",
+   "description": "",
+   "url": "https://medium.com/@codewithbharathi",
+   "new_tab": true,
+   "icon": "PenTool",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "outline",
+   "size": "md",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "quicklinks",
+    "footer"
+   ],
+   "id": "d08bd8e9-7897-433d-ae5e-9806c6acd325",
+   "order": 6,
+   "created_at": "2026-11-17T11:25:10.927644+00:00",
+   "updated_at": "2026-11-17T11:25:10.927646+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Email me",
+   "description": "",
+   "url": "mailto:bharathi91m@gmail.com",
+   "new_tab": false,
+   "icon": "Mail",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "secondary",
+   "size": "md",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "contact"
+   ],
+   "id": "5b3066c5-fc83-461c-93bc-14774eabbb75",
+   "order": 7,
+   "created_at": "2026-11-17T11:25:10.927895+00:00",
+   "updated_at": "2026-11-17T11:25:10.927897+00:00"
+  },
+  {
+   "visible": true,
+   "label": "Recruiter Quick View",
+   "description": "One-page printable summary",
+   "url": "/quick-view",
+   "new_tab": true,
+   "icon": "FileText",
+   "icon_url": "",
+   "border_color": "",
+   "bg_color": "",
+   "text_color": "",
+   "style": "secondary",
+   "size": "md",
+   "align": "left",
+   "position": "bottom",
+   "placements": [
+    "summary",
+    "quicklinks"
+   ],
+   "id": "298c39ad-ee64-40de-ab13-8b79029dbd69",
+   "order": 8,
+   "created_at": "2026-11-17T12:21:43.328931+00:00",
+   "updated_at": "2026-11-17T12:21:43.328931+00:00"
+  }
+ ],
+ "testimonials": [],
+ "resume": {
+  "available": true,
+  "filename": "IOS Mobile Engineer - Bharathi Kumar.pdf",
+  "size": 413642,
+  "updated_at": "2026-11-17T11:38:27.021293+00:00"
+ },
+ "published_at": "2026-11-18T18:13:47.542468+00:00"
+}

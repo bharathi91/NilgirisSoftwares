@@ -4,7 +4,7 @@ import { Show, UserButton, useClerk } from "@clerk/react";
 import _ from "lodash";
 import { toast } from "sonner";
 import { LayoutDashboard, BarChart3, Activity, PenTool, Files, Home, Menu, PanelBottom, Palette, Images, Puzzle, Wand2, Building2, UserRound, Briefcase, FolderKanban, Cpu, Quote, Newspaper, HelpCircle,
-  Inbox, Users, Mail, Bell, Bot, Mic, Languages, BookOpen, MessagesSquare, Search, Share2, TrendingUp, Shuffle, ShieldCheck, KeyRound, Settings, Lock, ScrollText, DatabaseBackup, History, Rocket, Eye, Save, Undo2, X, ExternalLink } from "lucide-react";
+  Inbox, Users, Mail, Bell, Bot, Mic, Languages, BookOpen, MessagesSquare, Search, Share2, TrendingUp, Shuffle, ShieldCheck, KeyRound, Settings, Lock, ScrollText, DatabaseBackup, History, Rocket, Eye, Save, Undo2, X, ExternalLink, Contact } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { useAdminApi, errMsg } from "../lib/api";
@@ -17,6 +17,7 @@ const Media = lazy(() => import("./MediaLibrary"));
 const Business = lazy(() => import("./Business"));
 const Blog = lazy(() => import("./Blog"));
 const Ops = lazy(() => import("./Ops"));
+const PortfolioAdmin = lazy(() => import("./PortfolioAdmin"));
 
 const Ctx = createContext(null);
 export const useAdmin = () => useContext(Ctx);
@@ -33,6 +34,7 @@ export const NAV = [
   ["Content Management", [["about", "About Company", Building2, "content.write"], ["founder", "Founder Profile", UserRound, "content.write"], ["services", "Services", Briefcase, "content.write"],
     ["projects", "Projects", FolderKanban, "content.write"], ["technologies", "Technologies", Cpu, "content.write"], ["testimonials", "Testimonials", Quote, "content.write"],
     ["blog", "Blog", Newspaper, "content.read"], ["faqs", "FAQs", HelpCircle, "content.write"]]],
+  ["Portfolio", [["portfolio", "Portfolio Management", Contact, "content.write"]]],
   ["Business Management", [["inquiries", "Contact Inquiries", Inbox, "leads.read"], ["leads", "Leads & CRM", Users, "leads.read"], ["email-templates", "Email Templates", Mail, "leads.read"], ["notifications", "Notifications", Bell, "content.read"]]],
   ["AI Management", [["ai-chat", "Chat Assistant", Bot, "ai.manage"], ["ai-voice", "Voice Assistant", Mic, "ai.manage"], ["ai-languages", "Languages", Languages, "ai.manage"],
     ["ai-knowledge", "Knowledge Base", BookOpen, "ai.manage"], ["ai-conversations", "Conversation Settings", MessagesSquare, "ai.manage"]]],
@@ -103,6 +105,10 @@ function TopBar({ setOpen }) {
   const loc = useLocation(), nav = useNavigate();
   const key = loc.pathname.split("/")[2] || "dashboard";
   const label = ALL.find((x) => x[0] === key)?.[1] || "Admin";
+  if (key === "portfolio") return (<header className="sticky top-0 z-30 h-16 border-b bg-background/85 backdrop-blur-xl flex items-center gap-3 px-4 md:px-6">
+    <button className="lg:hidden" onClick={() => setOpen(true)} data-testid="admin-menu-toggle"><Menu size={20} /></button>
+    <h1 className="font-heading text-base md:text-lg truncate" data-testid="admin-page-title">{label}</h1>
+    <div className="ml-auto pl-1" title={`${me?.email} · ${me?.role}`}><UserButton /></div></header>);
   return (<header className="sticky top-0 z-30 h-16 border-b bg-background/85 backdrop-blur-xl flex items-center gap-3 px-4 md:px-6">
     <button className="lg:hidden" onClick={() => setOpen(true)} data-testid="admin-menu-toggle"><Menu size={20} /></button>
     <h1 className="font-heading text-base md:text-lg truncate" data-testid="admin-page-title">{label}</h1>
@@ -140,6 +146,7 @@ function Shell() {
         <Route path="themes" element={<Theme />} />
         <Route path="media" element={<Media />} />
         <Route path="blog" element={<Blog />} />
+        <Route path="portfolio" element={<PortfolioAdmin />} />
         {["inquiries", "leads", "email-templates", "notifications"].map((k) => <Route key={k} path={k} element={<Business screen={k} />} />)}
         {["dashboard", "analytics", "marketing-analytics", "activity", "users", "roles", "security", "audit", "backups", "versions", "publish"].map((k) => <Route key={k} path={k} element={<Ops screen={k} />} />)}
         <Route path=":screen" element={<Content />} />

@@ -1,0 +1,48 @@
+.pf-marquee { animation: pf-marquee 70s linear infinite; }
+.pf-marquee:hover { animation-play-state: paused; }
+@keyframes pf-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .pf-marquee { animation: none; } }
+
+.pf-grain {
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.pf-root, .pf-root * { border-color: hsl(var(--border)); }
+.pf-root { font-family: var(--font-body); }
+
+.pf-card {
+  border-radius: var(--radius);
+  background: hsl(var(--card));
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s, box-shadow 0.5s;
+}
+.pf-root[data-card="bordered"] .pf-card { border: 1px solid hsl(var(--border)); }
+.pf-root[data-card="bordered"] .pf-card:hover { border-color: hsl(var(--primary) / 0.6); transform: translateY(-4px); }
+.pf-root[data-card="flat"] .pf-card { background: hsl(var(--secondary)); }
+.pf-root[data-card="elevated"] .pf-card { box-shadow: 0 20px 50px -25px rgb(0 0 0 / 0.35); }
+.pf-root[data-card="elevated"] .pf-card:hover { transform: translateY(-6px); box-shadow: 0 30px 70px -25px rgb(0 0 0 / 0.45); }
+.pf-root[data-card="glass"] .pf-card { background: hsl(var(--card) / 0.55); backdrop-filter: blur(18px); border: 1px solid hsl(var(--foreground) / 0.1); }
+
+.pf-project-card.is-flash { animation: pf-card-flash 2.2s ease-out; }
+@keyframes pf-card-flash {
+  0%, 40% { box-shadow: 0 0 0 3px hsl(var(--primary)); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+}
+
+@media print {
+  @page { size: A4; margin: 12mm; }
+  .pf-no-print { display: none !important; }
+  .pf-qv-sheet { zoom: 0.86; }
+  .pf-qv-page { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+.pf-rich p { margin: 0 0 1em; line-height: 1.75; }
+.pf-rich h3 { font-family: var(--font-heading); font-size: 1.5em; font-weight: 700; margin: 1.2em 0 0.5em; letter-spacing: -0.02em; }
+.pf-rich ul { list-style: disc; padding-left: 1.25em; margin: 0 0 1em; }
+.pf-rich ol { list-style: decimal; padding-left: 1.25em; margin: 0 0 1em; }
+.pf-rich a { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 3px; }
+.pf-rich b, .pf-rich strong { font-weight: 700; }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }

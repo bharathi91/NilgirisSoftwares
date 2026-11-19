@@ -42,3 +42,17 @@ A premium, mobile-first corporate website for The Nilgiris Softwares Private Lim
 - P2: Media toolbar search width, wrapping of the header button, portfolio header gap, cookie banner overlap.
 - P2: Voice assistant once a self-hosted speech backend exists. Optional email 2FA in Clerk. Per-role content assignment for editors.
 - P2: Docker/VPS deployment documentation and an admin user guide.
+
+## Iteration 4 — Website consolidation (2026-11-19)
+- Phases 1–5 approved (analysis, backup, portfolio integration, CMS, preview testing). Phases 6–7 (deploy to .com, release .me) wait for user approval. No domain or DNS changes made.
+- Backups: /app/backups (db json, code tgz, website1_source.zip, website1_public_site.json).
+- Website 1 source (career-profile-hub ZIP) migrated as real components to frontend/src/portfolio (namespaced classes and fonts: pf-*). Routes: /portfolio, /portfolio/work/:id, /portfolio/quick-view and /portfolio/preview. Legacy /work/:id and /quick-view redirect.
+- Company projects moved from /portfolio to /projects; old /portfolio/<slug> links redirect.
+- Backend: pf:draft and pf:published in cms, with versions in portfolio_versions. Public endpoints: /api/public/portfolio (ETag, hides items marked not visible), /api/public/portfolio/resume, and /api/public/portfolio/contact (creates a lead with source portfolio plus an email alert). Admin: /api/admin/portfolio/{draft,publish,discard,versions,versions/{id}/restore}. /api/public/site includes portfolio_nav.
+- Admin "Portfolio Management" (admin/PortfolioAdmin.jsx) covers profile, sections, projects, skills, experience, achievements and education, résumé, contact and buttons, nav, SEO, colours and versions.
+- Data and images were copied into Object Storage (scripts/portfolio_import.py). Company hotlinks to the old .com files were replaced and founder links now go to /portfolio (scripts/content_update_v5.py). MoneyGram now uses the user's logo.
+- Test iteration 6: backend 45/46 (the one failure is the outside email 429 rate limit) and the frontend passes. Visibility-switch bug fixed afterwards.
+
+## Pending (portfolio)
+- P0 on approval: deploy to thenilgirissoftwares.com. Website 1's Emergent project must first release .com. Then detach .me.
+- P1: Translate "My Portfolio" in Tamil. Warn before a version restore overwrites unpublished draft edits. Return 404 on portfolio publish when no draft exists. Make the mobile menu cover the full screen on /portfolio.
