@@ -132,3 +132,5 @@
 .feature-img { aspect-ratio: 16/9; overflow: hidden; border-bottom: 1px solid var(--c-border); }
 .feature-img img { transition: transform .6s cubic-bezier(.22,1,.36,1); }
 .card:hover .feature-img img { transform: scale(1.05); }
+.founder-photo { aspect-ratio: auto; }
+@media (max-width: 767px) { .hero-controls { flex-wrap: wrap; padding-right: 80px; gap: 8px; } .hero-controls .dot { width: 18px; } .hero-controls .dot.on { width: 30px; } }

@@ -1,0 +1,39 @@
+{
+  "summary": "Frontend-only testing of the iteration-2 features (Playwright, desktop 1920 + mobile 390, plus Super Admin UI with a ticket sign-in). Almost everything works: 10-slide hero (dots 0-9, prev/next, wrap-around; slide 3 'Meet the Founder' goes to https://thenilgirissoftwares.com), WhatsApp button (on /, /about, /portfolio, /contact, /blog and case study pages; href https://wa.me/919585483215?text=...; stacked 70px above chat-open-button with no overlap; chat panel opens and accepts input), about carousel (multi-paragraph text, auto-slides, 5 dots clickable), 4 'Why choose us' cards with images, tech chips with logos (28 of 30 load) and working tab filters, founder photo/name/button all open thenilgirissoftwares.com in a new tab, /about full profile (8 experience entries, 4 achievements, education, industries), /portfolio has 18 cards with correct classifications and the 'Illustrative image' tag on the 6 generated covers, the type filter and search work, and modal 'Read case study' goes to /portfolio/<slug>. Case studies for moneygram/kr-hospital/golfapp/strongbox render; unknown-slug shows not-found. Admin: Projects screen shows the new case-study fields; adding a result and publishing showed it on case-study-results; the Founder screen has the portfolio URL and achievements; turning off the Global Settings WhatsApp switch and publishing hid the button on the live site. Content was then restored from Version History ('Tech logos, why-choose-us images, about carousel, founder portfolio link'), and a check against the public site API showed the live content matches what was there before testing (ignoring auto-generated IDs). No JS page errors. Issues found: on mobile the chat button covers the hero 'next' button, the case study page doesn't scroll to the top, the hospital covers show '[GENERIC HOSPITAL NAME]', the hospital case studies are thin, the AWS logo is broken, and the Apple logos are hard to see.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Hero carousel controls (mobile 390px)", "issue": "With 10 dots the controls row stretches to the right edge (right=370px), so the floating chat button (y 766-824) covers hero-next completely: elementFromPoint at the hero-next centre returns chat-open-button. The cookie banner also covers dot 8 until it is dismissed. Next slide cannot be tapped on mobile.", "selector": "[data-testid=hero-next]", "priority": "MEDIUM"},
+      {"component": "CaseStudy page (Pages.jsx)", "issue": "Navigating from the portfolio modal 'Read case study' keeps the previous scroll position (window.scrollY=358 after navigation), so the user lands part-way down the case study. Unlike DynamicPage, CaseStudy has no window.scrollTo(0,0) on slug change.", "selector": "[data-testid=case-study]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Portfolio / case study – hospital projects", "issues": ["All 4 hospital projects (KR, DJ, Subbu, Savidha) use the same generated cover image, and its mock browser shows the placeholder text 'Welcome to [GENERIC HOSPITAL NAME]'. This looks unprofessional; use a different image per hospital, or real screenshots of the live sites (thenilgirissoftwares.org/.net/.info, nilgirissoftware.com).", "The hospital case studies (Company projects) only show the title, summary, cover and a Visit link. There is no contribution, features, tech or results, so they are the thinnest pages even though they are the company's own work."]},
+      {"screen": "Home tech stack", "issues": ["The AWS logo (devicon amazonwebservices-original-wordmark.svg) does not load and is hidden by onError. Use amazonwebservices-plain-wordmark or another icon. The Framer Motion logo is also missing, which the review request says is expected.", "UIKit and Core Data use a black Apple logo, which is nearly invisible on the dark chip background. Use a white/light variant in dark mode."]},
+      {"screen": "Home about carousel", "issues": ["The carousel dots are thin and low-contrast at the bottom-left of the image, so they are hard to see or tap."]},
+      {"screen": "/portfolio", "issues": ["There is a large empty gap (~250px) between the page header subtitle and the search/filter row (page_header padding plus projects section padding)."]},
+      {"screen": "Case study layout", "issues": ["The case study content is 1080px wide while the header container is wider, so the left edge (x=375) does not line up with the logo/header (x=310). This is minor."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Move the hero controls on mobile (e.g. centre them or add right padding of about 90px for the floating buttons), or raise the FABs, so hero-next is not covered by chat-open-button",
+    "Add useEffect(() => window.scrollTo(0,0), [slug]) in CaseStudy (Pages.jsx)",
+    "Replace the shared '[GENERIC HOSPITAL NAME]' cover with a distinct cover for each hospital, or real screenshots",
+    "Fill in contribution, features and tech for the 4 hospital company case studies",
+    "Fix the AWS logo URL; use a light Apple logo variant for UIKit and Core Data in dark mode",
+    "Improve the about carousel dot visibility; reduce the gap above the /portfolio filters"
+  ],
+  "critical_code_review_comments": [
+    "Pages.jsx re-declares CLS, which duplicates CLASS_LABEL already exported from Sections.jsx. Import it instead (DRY).",
+    "CaseStudy defines the H component inside render, so it is re-created on every render. Hoist it out.",
+    "CaseStudy uses site.projects without a guard. It is safe only because SiteShell renders a loader while site is null, which is fragile if the render order changes.",
+    "WhatsAppButton correctly strips non-digits from the number ('+91 9585483215' becomes 919585483215)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped as requested)", "frontend": "92%"},
+  "seed_data_creation": "None kept. A TEST_99%/TEST_uptime result was temporarily published on kr-hospital and the WhatsApp button was temporarily turned off. Both were reverted by restoring the version 'Tech logos, why-choose-us images, about carousel, founder portfolio link' (new rollback entry at 02:14). The public site API was checked against the snapshot taken before testing and matches (ignoring auto-generated IDs).",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Admin field testids: the Fields prefix keeps the path's original case, e.g. field-settings-whatsappButton-enabled (not lowercase). Project list items are list-projects-item-<i>; project fields are field-list-projects-<i>-<key>; results add button is field-list-projects-<i>-results-add; result inputs are field-field-list-projects-<i>-results-0-value/label. KR Hospital is at index 10. Publishing from the admin needs no confirm dialog; restoring a version uses confirm-ok. Ticket sign-in works with /admin/login?__clerk_ticket=<fresh ticket> (single use per browser session). Before testing, the draft showed has_unpublished=true, but the only differences from live were private fields and regenerated IDs."
+}

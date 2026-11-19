@@ -236,7 +236,7 @@ function Founder({ s }) {
   const go = s.props.buttonHref || f.links?.portfolio;
   return (<><Head s={s} />
     <div className="grid lg:grid-cols-[320px_1fr] gap-10 mt-12 items-start text-left">
-      <SmartLink href={go || "/about"} className="media-frame aspect-[4/5] block card-hover" testid="founder-photo-link">{f.photo ? <Img src={f.photo} alt={f.name} className="w-full h-full object-cover" /> : <div className="proj-initial h-full flex items-center justify-center">{f.name?.[0]}</div>}</SmartLink>
+      <SmartLink href={go || "/about"} className="media-frame founder-photo block card-hover" testid="founder-photo-link">{f.photo ? <Img src={f.photo} alt={f.name} sizes="320px" className="w-full h-auto block" /> : <div className="proj-initial h-full flex items-center justify-center">{f.name?.[0]}</div>}</SmartLink>
       <div><SmartLink href={go || "/about"} className="card-title text-2xl hover:text-[var(--c-accent)]" testid="founder-name">{f.name}</SmartLink><p className="accent mt-1">{f.title}</p>
         <p className="body-text mt-5">{f.bio}</p>
         <div className="flex flex-wrap gap-2 mt-6">{(f.expertise || []).map((x) => <span key={x} className="chip">{x}</span>)}</div>

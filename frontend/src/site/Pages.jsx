@@ -72,6 +72,7 @@ function CaseStudy() {
   const loc = useLocation();
   const slug = decodeURIComponent(loc.pathname.replace(/^\/portfolio\//, "").replace(/\/$/, ""));
   const p = site.projects.find((x) => x.slug === slug && x.visible !== false);
+  useEffect(() => { window.scrollTo(0, 0); }, [slug]);
   useSeo(null, p ? { title: `${p.name} — Case study`, description: p.summary || p.description, ogImage: p.cover || p.screenshots?.[0],
     jsonld: JSON.stringify({ "@context": "https://schema.org", "@type": "CreativeWork", name: p.name, about: p.category, description: p.description }) } : { title: "Not found", noindex: true });
   if (!p) return <NotFound />;
