@@ -66,6 +66,11 @@ app = FastAPI(title="The Nilgiris Softwares CMS API")
 api = APIRouter(prefix="/api")
 
 
+def etag_match(request: Request, etag: str) -> bool:
+    inm = request.headers.get("if-none-match", "")
+    return any(t.strip().removeprefix("W/") == etag for t in inm.split(",") if t.strip())
+
+
 def now():
     return datetime.now(timezone.utc)
 
@@ -219,7 +224,7 @@ async def public_site(request: Request):
     pub = await get_cms("published")
     etag = f'"{pub["version_id"]}"'
     headers = {"ETag": etag, "Cache-Control": "public, max-age=30, must-revalidate"}
-    if request.headers.get("if-none-match") == etag:
+    if etag_match(request, etag):
         return Response(status_code=304, headers=headers)
     body = json.dumps({"version": pub["version_id"], "data": public_view(pub["data"])})
     return Response(content=body, media_type="application/json", headers=headers)
@@ -596,7 +601,7 @@ async def serve_media(fname: str, request: Request, w: int = 0):
     headers = {"Cache-Control": "public, max-age=31536000, immutable", "ETag": etag,
                "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; img-src data:; sandbox",
                "X-Content-Type-Options": "nosniff"}
-    if request.headers.get("if-none-match") == etag:
+    if etag_match(request, etag):
         return Response(status_code=304, headers=headers)
     fp = await _cached_bytes(spath)
     return _range_response(fp, ctype, request, headers)
@@ -620,7 +625,7 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 async def notify_emails() -> list:
-    pub = await get_cms("draft")
+    pub = await get_cms("published")
     lst = pub["data"]["settings"].get("notifications", {}).get("emails") or []
     return [e for e in lst if EMAIL_RE.match(e)] or sorted(super_admin_emails())
 

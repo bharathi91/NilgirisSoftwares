@@ -45,7 +45,8 @@ function Legal({ kind }) {
 }
 
 function BlogPost() {
-  const { slug } = useParams();
+  const params = useParams(), loc = useLocation();
+  const slug = params.slug || decodeURIComponent(loc.pathname.replace(/^\/blog\//, "").replace(/\/+$/, ""));
   const [p, setP] = useState(null), [err, setErr] = useState(false);
   useEffect(() => { axios.get(`${API}/public/blog/${slug}`).then((r) => setP(r.data)).catch(() => setErr(true)); }, [slug]);
   useSeo(null, p ? { title: p.seo?.title || p.title, description: p.seo?.description || p.excerpt, ogImage: p.seo?.ogImage || p.cover,

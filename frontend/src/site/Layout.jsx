@@ -30,7 +30,7 @@ export function Header() {
   const nav = site.navigation;
   const [open, setOpen] = useState(false), [scrolled, setScrolled] = useState(false);
   const loc = useLocation();
-  useEffect(() => setOpen(false), [loc.pathname]);
+  useEffect(() => { setOpen(false); }, [loc.pathname]);
   useEffect(() => { const f = () => setScrolled(window.scrollY > 20); f(); window.addEventListener("scroll", f, { passive: true }); return () => window.removeEventListener("scroll", f); }, []);
   const items = nav.items.filter((i) => i.visible !== false);
   return (

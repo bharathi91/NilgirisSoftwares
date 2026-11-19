@@ -38,7 +38,7 @@ function App() {
           </Routes>
         </Suspense>
       </ClerkAuthProvider>
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="bottom-right" />
     </BrowserRouter>
   );
 }

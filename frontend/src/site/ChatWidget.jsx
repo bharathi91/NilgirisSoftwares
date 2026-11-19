@@ -14,7 +14,7 @@ export default function ChatWidget() {
   const [lang, setLang] = useState(ai.defaultLanguage || "en"), [handover, setHandover] = useState(false);
   const sid = useRef(sessionStorage.getItem("nsw_chat") || null);
   const end = useRef(null);
-  useEffect(() => end.current?.scrollIntoView({ behavior: "smooth" }), [msgs, handover]);
+  useEffect(() => { end.current?.scrollIntoView({ behavior: "smooth" }); }, [msgs, handover]);
   if (!ai.chatEnabled || preview) return null;
   const userCount = msgs.filter((m) => m.role === "user").length;
 

@@ -1,0 +1,54 @@
+{
+  "summary": "First full E2E run of Nilgiris CMS (public site + Super Admin CMS) on the preview URL. Backend: 17 pytest tests (RBAC 401/403, editor can't publish or manage users, stale-rev 409, broken-link publish 400, versions, media upload/serve/304/webp/crop/delete, leads CRUD/notes/template email to delivered@resend.dev/CSV, blog draft vs published, invites, last-super-admin 409, backup, sitemap/robots). 15 passed. 1 failure is a real bug: weak ETag via CDN, so /api/public/site never returns 304 in browsers. The other was a preview-ingress header override and the test has been adjusted. Frontend: the public pages, carousel, tech tabs, project badges, FAQ, services dropdown, dark/light toggle (persists on reload), portfolio filters and modal, 404 page, mobile menu and the 390px no-overflow check all pass. The contact form needs consent and creates a lead. Chat streams a GPT-6 Luna reply and the handover creates a lead with source=chat (after a crash fix, see below). All 41 admin sidebar screens render without crashing, and the voice screen says honestly that voice is not configured. Builder: hero slide title edits update the preview iframe live; reorder, hide/show, add section, delete with confirm and device toggles all work, and Save Draft + Publish show up on the public site. These all work: theme primary color publish, All Pages create/duplicate/delete with confirm, the contact-confirmed switch (details then appear in the footer and contact page), nav item add, footer copyright, SEO page title setting document.title, adding a project, the leads sheet with notes, blog create/publish from the UI, media upload/rename from the UI, backup download, version compare, publish-page diff, and Restore. TWO CRITICAL FRONTEND BUGS FOUND AND FIXED: (1) the chat widget crashed the whole app on send ('destroy is not a function'); (2) the blog detail page /blog/<slug> always showed not-found. Both are fixed and verified.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET /api/public/site", "issue": "The CDN gzips the response and turns the ETag into a weak one (W/\"<vid>\"). Browsers send W/\"...\" back in If-None-Match, but the server compares it exactly to the strong tag, so it always answers 200 and never 304 for real browsers (curl without gzip does get 304). Fix: strip a leading 'W/' and handle comma-separated lists before comparing. Apply the same fix to the media ETag check."},
+      {"endpoint": "POST /api/public/leads, /api/public/chat/handover", "issue": "Every lead triggers notification emails. notify_emails() falls back to the real Super Admin addresses (bharathi91m/92m, shanthi91m) and reads the DRAFT notification settings instead of the published ones (the variable is named 'pub' but it fetches 'draft'). Test runs therefore email the real owners. Consider skipping notifications for +clerk_test or delivered@resend.dev senders, and read the published settings."},
+      {"endpoint": "POST /api/public/chat/handover", "issue": "Response does not return the lead id (contact form does) — harder to correlate/cleanup."},
+      {"endpoint": "Blog publish_at", "issue": "The admin uses <input type=datetime-local>, which produces a timezone-less local time (e.g. '2026-11-19T10:00'). The backend compares it as a string against UTC iso(), so a scheduled post in IST goes live 5.5 hours late. Convert to UTC on the client or the server."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ChatWidget", "issue": "FIXED BY TESTER. useEffect(() => end.current?.scrollIntoView(...)) returned the value of scrollIntoView, which newer Chromium returns as a Promise. React then threw 'destroy is not a function' and the whole site crashed as soon as a chat message was sent. Wrapped the effect body in braces; Layout.jsx setOpen effect fixed the same way as a precaution.", "selector": "[data-testid=chat-send-button]", "priority": "CRITICAL"},
+      {"component": "BlogPost (site/Pages.jsx)", "issue": "FIXED BY TESTER. BlogPost used useParams().slug, but there is no <Route path='/blog/:slug'>, so slug was undefined. Every post page requested /api/public/blog/undefined and showed not-found. Now the slug is taken from location.pathname. Verified working.", "selector": "[data-testid=blog-post-title]", "priority": "CRITICAL"},
+      {"component": "Admin header / sonner Toaster", "issue": "Toasts sit at top-right directly over the Publish / Save Draft buttons and block clicks for about 4s after every save (Playwright confirmed the toast intercepts pointer events). Move the toaster to bottom-right or add a top offset in admin.", "selector": "[data-testid=publish-button]", "priority": "MEDIUM"},
+      {"component": "All Pages slug input", "issue": "The slug input is uncontrolled (defaultValue) and keyed by index, and it only commits on blur. After a delete or reorder, the inputs can show stale slugs, and a change is lost if the user clicks Duplicate or Publish without blurring first.", "selector": "[data-testid^=page-slug-input-]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Media Library toolbar", "issues": ["The search input is squashed to about 40px wide (only 'S' of the placeholder is visible) while the folder and type selects take all the remaining space"]},
+      {"screen": "Public header", "issues": ["Adding one more nav item makes the 'Start Your Project' CTA wrap onto 2 lines at about 1570px width; add whitespace-nowrap or collapse the nav earlier"]},
+      {"screen": "Portfolio page", "issues": ["Large empty gap (about 250px) between the page header subtitle and the filter bar"]},
+      {"screen": "Cookie banner", "issues": ["Bottom-left banner covers the footer copyright text and overlaps the mobile menu CTA until dismissed"]},
+      {"screen": "Admin forms", "issues": ["Lead follow-up and blog publish date use native date/datetime-local pickers instead of the shadcn Calendar/Popover"]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_cms_api.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "Normalise weak ETags (strip 'W/') in /api/public/site and /api/media/f so browsers get 304s behind the CDN",
+    "Move the admin toaster so it doesn't cover the header Publish/Save buttons",
+    "Fix the Media Library search input width",
+    "Make the pages slug input controlled (or keyed by page id)",
+    "Make notify_emails read published settings; avoid emailing real admins for test leads",
+    "Convert blog publish_at from local datetime to UTC",
+    "Return the lead id from /api/public/chat/handover",
+    "Review the two tester fixes (ChatWidget.jsx effect, Pages.jsx BlogPost slug)"
+  ],
+  "critical_code_review_comments": [
+    "server.py is 1392 lines; split it into routers (cms, media, leads, blog, ai, users, ops)",
+    "notify_emails(): variable 'pub' actually loads the draft",
+    "restore_version and publish don't run validate_content/link_errors on the restored data (acceptable for rollback, but worth noting)",
+    "Avoid implicit-return arrow functions in useEffect anywhere (this caused the chat crash)",
+    "Draft dirty flag: the builder 'edit' postMessage always calls update(), even when the value is unchanged, which marks the draft dirty"
+  ],
+  "updated_files": ["/app/frontend/src/site/ChatWidget.jsx", "/app/frontend/src/site/Layout.jsx", "/app/frontend/src/site/Pages.jsx", "/app/backend/tests/test_cms_api.py"],
+  "success_rate": {"backend": "94% (16/17 counting the env-adjusted test; 1 real minor bug: weak ETag)", "frontend": "~93% after fixes (2 critical crashes found and fixed; remaining issues are minor/design)"},
+  "test_credentials": "Used /app/memory/test_credentials.md (Clerk tickets/tokens via /app/scripts/clerk_test_auth.py). Tickets are single-use.",
+  "seed_data_creation": "None left behind. Created then deleted: TEST_ leads (contact form, chat handover, API lead), TEST posts, TEST media, TEST pages (draft only, deleted), chat sessions. Published test changes (hero title, red primary, TEST_Nav, footer, SEO, project, contact confirmed) were reverted by restoring 'Initial content' through the Version History UI, which is now live with default content. Note that contact.confirmed is back to false. Leads 'Tester t@example.com' and media 't.png' were created by the main agent and were not touched.",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Run the backend tests with: cd /app/backend && REACT_APP_BACKEND_URL=... pytest tests/test_cms_api.py -n 0. test_public_site_etag_304 fails until the weak-ETag fix lands. The preview ingress forces Cache-Control: no-store, so check immutable on localhost:8001. Admin UI login: generate a fresh ticket per browser session (single-use) and open /admin/login?__clerk_ticket=... Don't remove sonner toast DOM nodes manually (that causes a React insertBefore crash); click via element.click() instead. Builder slide fields: click [data-testid=field-sec-slides-item-0] to expand, title input is [data-testid=field-field-sec-slides-0-title]. Not covered in UI: editor/outsider UI views (API-verified), logo media picker, crop UI, lead email send from UI (API-verified), Users role-change UI.",
+  "rca of the issue": "Chat crash: React treats any non-function return value from an effect as a destroy function. scrollIntoView now returns a Promise in Chromium, so on the next render React called promise() and threw 'destroy is not a function', which unmounted the whole tree. Blog 404: PublicSite chooses <BlogPost/> by pathname without a react-router Route, so useParams() is {} and slug is undefined, which leads to GET /api/public/blog/undefined returning 404 and the NotFound page. Fix: read the slug from location.pathname."
+}
