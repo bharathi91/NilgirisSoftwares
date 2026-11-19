@@ -1,0 +1,29 @@
+{
+  "summary": "Frontend-only retest of the footer icon visibility bug in light mode. The public site fix WORKS: in light mode (footer bg rgb(11,26,20)) the social-linkedin and social-github icons, links, logo text, headings and copyright now compute to #F7FAFC (or 65% of it) and are clearly visible in screenshots. Dark mode is unchanged (#F7FAFC on rgb(6,10,14)). The social icon hover in light mode shows the primary bg rgb(27,158,108) with white icon. On mobile at 390px in light mode the icons are visible and there is no horizontal overflow (scrollWidth 390). FAIL: the admin Themes & Design screen does NOT have the 'Footer text & icons (empty = automatic)' field. data-testid theme-color-footerText is missing because ThemeEditor.jsx COLORS has no footerText entry. The screen itself loads with no JS errors. Minor regression: footer links no longer change to the accent color on hover.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Admin ThemeEditor", "issue": "The new 'Footer text & icons (empty = automatic)' color field is missing. COLORS in /app/frontend/src/admin/ThemeEditor.jsx (lines 10-11) has no ['footerText', 'Footer text & icons (empty = automatic)'] entry, so nothing renders. The UI shows 16 colour fields with no footerText. Only SiteContext.jsx uses k.footerText.", "selector": "[data-testid='theme-color-footerText']", "priority": "HIGH"},
+      {"component": "Footer links hover", "issue": "Regression: the accent hover color is lost. In App.css, '.site-footer .footer-link' (line 138, specificity 0,2,0, declared later) overrides '.footer-link:hover {color: var(--c-accent)}' (0,2,0, earlier). Hovering now only changes opacity from 0.8 to 1; measured color stays rgb(247,250,252). Fix: add '.site-footer .footer-link:hover { color: var(--c-accent); }'.", "selector": "[data-testid='site-footer'] .footer-link", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Footer (desktop and mobile)", "issues": ["The cookie banner covers the bottom-left of the footer and the start of the copyright text until it is dismissed (pre-existing)."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Add ['footerText', 'Footer text & icons (empty = automatic)'] to COLORS in ThemeEditor.jsx. Make sure an empty value works in the color Field: an <input type=color> with an empty value falls back to #000000, so the picker should not write black back unless the user picks a color. Keep a way to clear the value back to automatic.",
+    "Add '.site-footer .footer-link:hover { color: var(--c-accent); }' to App.css to bring back the footer link hover color."
+  ],
+  "critical_code_review_comments": [
+    "SiteContext lum() treats non-6-digit hex values such as #FFF or rgba() wrongly (padEnd turns #FFF into #FFF000). That is acceptable for the current presets, but 3-digit hex and rgb values should be normalized.",
+    "The footer's own border-top still uses var(--c-border). In the light theme that is a light border on a dark footer: minor, looks fine."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "80% (4/5 requested checks pass; admin footerText field missing)"},
+  "seed_data_creation": "None. Nothing was saved or published in admin.",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Measure computed colors with getComputedStyle on [data-testid=social-linkedin], [data-testid=social-github] and [data-testid=site-footer]. Light mode can be forced with localStorage nsw_mode='light'. Admin: get a ticket from scripts/clerk_test_auth.py, open /admin/login?__clerk_ticket=..., then click admin-nav-themes. Color fields have testids theme-color-<key> and theme-color-<key>-picker."
+}

@@ -8,7 +8,7 @@ import { Field, Panel, confirmAction } from "./fields";
 import { uid } from "../lib/api";
 
 const COLORS = [["bg", "Background"], ["surface", "Surface / alt sections"], ["card", "Card background"], ["primary", "Primary"], ["secondary", "Secondary"], ["accent", "Accent"], ["text", "Text"], ["muted", "Muted text"],
-  ["border", "Borders"], ["header", "Header"], ["footer", "Footer"], ["buttonText", "Button text"], ["hover", "Button hover"], ["shadow", "Shadow"], ["gradientFrom", "Gradient start"], ["gradientTo", "Gradient end"]];
+  ["border", "Borders"], ["header", "Header"], ["footer", "Footer"], ["footerText", "Footer text & icons (empty = automatic)"], ["buttonText", "Button text"], ["hover", "Button hover"], ["shadow", "Shadow"], ["gradientFrom", "Gradient start"], ["gradientTo", "Gradient end"]];
 const FONTS = ["Syne", "Figtree", "Bricolage Grotesque", "Fraunces", "Manrope", "Outfit", "DM Serif Display", "Space Mono", "Instrument Serif", "Sora", "Plus Jakarta Sans", "Lora", "Archivo", "Unbounded"];
 
 function Sample({ k }) {

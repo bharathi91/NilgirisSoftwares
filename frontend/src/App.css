@@ -140,3 +140,4 @@
 .site-footer .icon-btn { color: var(--c-footer-text, var(--c-text)); border-color: color-mix(in srgb, var(--c-footer-text, var(--c-text)) 25%, transparent); }
 .site-footer .icon-btn:hover { color: var(--c-btn-text); border-color: var(--c-primary); }
 .site-footer .border-t { border-color: color-mix(in srgb, var(--c-footer-text, var(--c-text)) 15%, transparent) !important; }
+.site-footer .footer-link:hover { color: var(--c-accent); opacity: 1; }
