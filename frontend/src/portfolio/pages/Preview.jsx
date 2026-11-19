@@ -11,7 +11,9 @@ function DraftPreview() {
   const [data, setData] = useState(null);
   const nav = useNavigate();
   useEffect(() => {
-    api.get("/admin/portfolio/draft").then((r) => setData(r.data.data || {})).catch(() => nav("/admin/login", { replace: true }));
+    const LISTS = ["sections", "projects", "skills", "experiences", "achievements", "education", "certifications", "buttons", "nav_items", "testimonials"];
+    const shown = (d) => ({ ...d, ...Object.fromEntries(LISTS.filter((k) => Array.isArray(d[k])).map((k) => [k, d[k].filter((x) => x?.visible !== false)])) });
+    api.get("/admin/portfolio/draft").then((r) => setData(shown(r.data.data || {}))).catch(() => nav("/admin/login", { replace: true }));
   }, [api, nav]);
   if (!data) return <Loader label="Loading preview" />;
   return (

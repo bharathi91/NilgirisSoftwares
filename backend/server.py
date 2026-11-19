@@ -1504,6 +1504,7 @@ async def health():
 
 
 # ===================== Personal portfolio (/portfolio) =====================
+PF_LISTS = ["sections", "projects", "skills", "experiences", "achievements", "education", "certifications", "buttons", "nav_items", "testimonials"]
 PF_KEYS = {"profile", "theme", "seo", "site", "sections", "skills", "experiences", "projects", "education", "achievements", "settings", "resume"}
 
 
@@ -1521,6 +1522,9 @@ async def pf_nav() -> tuple[str, dict]:
 
 def pf_public_view(data: dict) -> dict:
     d = json.loads(json.dumps(data))
+    for k in PF_LISTS:
+        if isinstance(d.get(k), list):
+            d[k] = [x for x in d[k] if not isinstance(x, dict) or x.get("visible", True) is not False]
     r = d.get("resume") or {}
     d["resume"] = {"available": bool(r.get("available") and r.get("media_id")), "filename": r.get("filename", ""), "size": r.get("size"),
                    "updated_at": r.get("updated_at"), "url": "/api/public/portfolio/resume"}
