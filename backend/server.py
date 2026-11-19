@@ -453,9 +453,9 @@ async def list_testimonials(member: dict = Depends(need("content.read"))):
 
 @api.post("/admin/testimonial-submissions/{tid}/approve")
 async def approve_testimonial(tid: str, member: dict = Depends(need("content.write"))):
-    t = await db.testimonial_submissions.find_one({"id": tid}, {"_id": 0})
+    t = await db.testimonial_submissions.find_one_and_update({"id": tid, "status": "pending"}, {"$set": {"status": "approving"}}, projection={"_id": 0})
     if not t:
-        raise HTTPException(404)
+        raise HTTPException(409, "This submission was already handled")
     item = {"id": nid()[:10], "name": t["name"], "role": t["role"], "company": t["company"], "quote": t["quote"], "verified": True, "submitted_email": t["email"]}
     await db.cms.update_one({"key": "draft"}, {"$push": {"data.testimonials": item}, "$inc": {"rev": 1}, "$set": {"updated_at": iso(), "updated_by": member.get("email")}})
     await db.testimonial_submissions.update_one({"id": tid}, {"$set": {"status": "approved", "approved_by": member.get("email")}})

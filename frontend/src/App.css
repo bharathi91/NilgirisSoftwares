@@ -145,3 +145,10 @@
 .cls-founder_experience { background: color-mix(in srgb, var(--c-primary) 18%, transparent); color: var(--c-accent); }
 .thumb-blur { position: absolute; inset: -20px; background-size: cover; background-position: center; filter: blur(22px) saturate(1.2); opacity: .55; }
 .proj-thumb img.object-contain { padding: 14px; }
+.site-header .btn-primary, .nav-link, .mobile-link { white-space: nowrap; }
+html[lang="ta"] .nav-link { font-size: 13px; padding: 10px 10px; }
+@media (max-width: 1439px) { html[lang="ta"] .site-header [data-testid="header-cta"] { display: none; } }
+html[lang="ta"] .hero-title { font-size: clamp(32px, 5vw, 64px); line-height: 1.15; }
+@media (max-width: 639px) { .logo-text { font-size: 14px; max-width: 132px; white-space: normal; line-height: 1.1; } .site-header .wrap { gap: 10px; } .site-header .icon-btn { width: 36px; height: 36px; } }
+@media (max-width: 1279px) { html[lang="ta"] .site-header [data-testid="header-cta"] { display: none !important; } }
+html[lang="ta"] .site-header [data-testid="header-cta"] { white-space: nowrap; font-size: 13px; }

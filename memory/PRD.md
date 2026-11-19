@@ -28,8 +28,16 @@ A premium, mobile-first corporate website for The Nilgiris Softwares Private Lim
 - Fixed: founder photo cropping (now shown at its natural size), case study pages open at the top, and the next-slide button on mobile is no longer covered.
 - Content updates were applied with /app/scripts/content_update_v2.py and v3.py, then published as new versions.
 
+## Iteration 3 (2026-11-19)
+- Tamil website: a header language toggle switches the whole site. Published content is AI-translated with GPT-6 Luna and cached per published version (cms key tr:<lang>). Translation reruns on each publish, and the "Website languages" panel in admin Languages shows progress and a "Translate now" button. Fixed interface text comes from lib/i18n.js.
+- Testimonials: clients submit at /share-feedback. An admin approves the submission (it becomes a verified testimonial in the draft), then publishes.
+- Logos: AWS and Framer Motion fixed, and all logos sit on white badges.
+- Hospital case studies: real screenshots of the 4 live sites (in the media library), plus features, challenge, approach and what was delivered. The founder-experience badge is now green like company projects. Project thumbnails no longer crop logos (fitted image on a blurred background).
+- Header fixes: no overflow on mobile, and no wrapping in Tamil.
+
 ## Backlog
 - P1: Verify the founder's details and projects, add photos and screenshots, and confirm the contact details. The original site blocked automated import.
+- P1: Translation retry for failed batches; restrict regenerate to enabled languages; allow manual edits of Tamil translations
 - P1: Blog schedule timezone (datetime-local is treated as UTC). The All Pages slug input commits only on blur.
 - P2: Media toolbar search width, wrapping of the header button, portfolio header gap, cookie banner overlap.
 - P2: Voice assistant once a self-hosted speech backend exists. Optional email 2FA in Clerk. Per-role content assignment for editors.

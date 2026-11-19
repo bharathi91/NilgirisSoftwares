@@ -1,0 +1,48 @@
+{
+  "summary": "Iteration 5 tested the backend and frontend for the Tamil site, the testimonial collection flow, the logo fixes and the hospital case studies. Backend: 19/19 pytest pass. GET /api/public/site?lang=ta returns lang 'ta' with Tamil strings. Brand, project, technology names, slugs and hrefs are unchanged. The ta ETag/304 works. An unknown lang falls back to English. The translations status and regenerate endpoints work and need auth. Testimonial submit/reject/validation works. Hospital data is complete. Frontend: the language toggle works ('தமிழ்' in English mode, 'EN' in Tamil). Nav, hero, sections, footer, contact form labels, /about, /portfolio, /contact and case studies all become Tamil. Switching back restores English, and the choice persists on reload (nsw_lang, html lang attribute). The chat widget defaults to Tamil. /share-feedback works: the browser blocks submission without consent, and a valid submit shows the success message. Admin flow fully works: the submission appears in testimonial-submissions with Approve, Reject and Copy link. Approve adds it to the list editor with Verified on. Publish shows section-testimonials on the homepage with the quote. I then deleted it and republished. The Languages screen shows tr-status-ta 'Up to date · 100% translated' and 'Translate now' works. AWS and Framer Motion logos load. All 30 img.tech-logo have a white background and none are broken, in both dark and light mode. Portfolio thumbnails use object-contain with a blurred backdrop. The founder-experience badge is green like company projects. Hospital cards show real screenshots without an illustrative tag. All 4 hospital case studies have challenge, approach, 'What we delivered', 6 features, 2 loaded screenshots and a Visit project link (target _blank). FAILURES: the header overflows. At 1920 in Tamil the CTA wraps to 3 lines (87.5px tall inside the 72px header) and 'எங்களைப் பற்றி' wraps to 2 lines. At 390 the header overflows horizontally in both languages (scrollWidth 425 in EN and 415 in TA, viewport 390), so the hamburger menu button is partly off-screen.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/admin/testimonial-submissions/{tid}/approve", "issue": "No status check. Approving an already approved or rejected submission (double-click, or a second admin) pushes a duplicate testimonial into the draft. Only allow it when status == 'pending', otherwise return 409."},
+      {"endpoint": "POST /api/admin/translations/{lang}/regenerate", "issue": "lang is not checked against settings.siteLanguages or LANG_NAMES. Any string such as 'xx' starts a full LLM translation job and writes cms key tr:xx. 'Translate now' also reuses the cached db.translations strings, so it cannot fix a bad translation. It only fills in missing strings."},
+      {"endpoint": "translate_site", "issue": "A batch whose length does not match, or that raises, is skipped silently. The result is still stored as up_to_date with coverage < 100, and the strings stay English until the next run. Retry the batch once, or mark the result partial."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "Header (Tamil, desktop 1920)", "issue": "The header CTA 'உங்கள் திட்டத்தைத் தொடங்குங்கள்' wraps to 3 lines. Its pill is 133x87.5px and pokes out of the 72px header. The 'About' nav item 'எங்களைப் பற்றி' also wraps to 2 lines (62px). The requirement says no wrapping at 1920. Fix: add whitespace-nowrap to .nav-link and the CTA, tighten the nav gap/padding when lang=ta, or hide the header CTA below xl in Tamil.", "selector": "[data-testid='header-cta'], .nav-link", "priority": "HIGH"},
+      {"component": "Header (mobile 390, EN and TA)", "issue": "The header overflows horizontally. .wrap scrollWidth is 425px in EN ('தமிழ்' button 52px wide) and 415px in TA, and the document scrollWidth equals that, so the page scrolls sideways. The mobile-menu-toggle right edge is at 425px, so the hamburger is cut off. Cause: the shrink-0 logo with the full 'The Nilgiris Softwares' text, plus gap-6, plus 3 icon buttons, is wider than 390px. Fix: hide or shrink .logo-text below sm, use gap-3 on mobile, or make the language button smaller.", "selector": "[data-testid='site-header'] .wrap, [data-testid='mobile-menu-toggle']", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Tamil mode: untranslated static strings", "issues": [
+        "Case study 'Visit project ↗' is hardcoded in Pages.jsx line 89. 'Visit project' is already in the dictionary, so use t('Visit project').",
+        "ChatWidget header 'Ask us anything', 'AI assistant · replies may be imperfect' and the input placeholder 'Type your message…' are hardcoded in English. The dictionary already has them but ChatWidget does not use useT().",
+        "About section eyebrow 'Who we are' (Sections.jsx line 267) and the ShareFeedback eyebrow 'Testimonial' are hardcoded in English."
+      ]},
+      {"screen": "/contact (Tamil, desktop)", "issues": ["There is a large empty vertical gap (~200px) between the hero and the form at the first screenshot. It is probably a reveal animation that has not triggered yet. Please verify."]},
+      {"screen": "Hospital case studies", "issues": ["'Visit project' links point to thenilgirissoftwares.org, .net, .info and nilgirissoftware.com instead of hospital-branded domains. Please confirm these really are the live hospital sites."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_i18n_testimonials.py", "/app/test_reports/pytest/pytest_iter5.xml"],
+  "action_items": [
+    "Fix the Tamil desktop header wrapping. The CTA is 3 lines and 87.5px tall in a 72px header, and the 'About' item wraps. Use whitespace-nowrap and tighter spacing, or hide the CTA in Tamil below xl.",
+    "Fix the mobile (390px) header horizontal overflow in both languages (scrollWidth 415-425px; hamburger cut off).",
+    "Translate the remaining hardcoded strings: case study 'Visit project ↗', the ChatWidget header and placeholder, the 'Who we are' eyebrow and the 'Testimonial' eyebrow.",
+    "Approve endpoint: only approve submissions with status == 'pending', to avoid duplicate testimonials.",
+    "Validate lang in /admin/translations/{lang}/regenerate."
+  ],
+  "critical_code_review_comments": [
+    "SiteContext.jsx line 37-38: after 15 polls (~75s) with translating still true, the else branch writes the English payload into localStorage nsw_site_v1_ta. The cache is now English data under the Tamil key, and the next visit renders English until refetched. Only cache when !r.data.translating. The polling budget (75s) is also at the edge of the documented 30-90s translation time.",
+    "ContentScreens.jsx Submissions: Approve calls reload() (AdminApp load()), which replaces the local draft. Unsaved edits made in other admin screens (dirty state) are silently lost. Warn when dirty, or merge.",
+    "server.py translate_site uses asyncio.to_thread(lambda: asyncio.run(llm.send_message(msg))). A new event loop per batch inside a thread works but is fragile. Await llm.send_message directly.",
+    "public_site starts translate_site via BackgroundTasks on every request while a translation is missing. _tr_running dedupes within the process, but every visitor poll still schedules a task. That is fine for now, but consider a short-circuit before add_task.",
+    "testimonial_submissions has no admin delete or purge endpoint (reject only sets the status). The test submissions cannot be removed through the API."
+  ],
+  "updated_files": ["/app/backend/tests/test_i18n_testimonials.py"],
+  "success_rate": {"backend": "100% (19/19)", "frontend": "~85% (all functional flows pass; header overflow/wrap fails at 1920 TA and 390 EN/TA)"},
+  "seed_data_creation": "Created 2 testimonial submissions: TEST_ApiUser (rejected via the API) and TEST_UI Reviewer (approved via the UI). Both stay in db.testimonial_submissions with non-pending status because there is no delete endpoint. The approved TEST_UI Reviewer testimonial was deleted from the list editor and republished. The live site has 0 testimonials. The published content (version 727185b56e8f4cc3a50976bcac0f9008) is byte-identical to reference version 406f7b6d ('Hospital case studies with real screenshots, logo fixes, Tamil site language'). Tamil translation is up to date at 100%.",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend regression: pytest /app/backend/tests/test_i18n_testimonials.py (uses xdist from pytest.ini). The testimonial endpoint has a rate limit of 3 per 10 min per IP. Admin: get a ticket with python3 /app/scripts/clerk_test_auth.py ticket superadmin+clerk_test@example.com, open /admin/login?__clerk_ticket=..., wait ~6s, then go to /admin/testimonials or /admin/ai-languages. List editor testids: list-testimonials-item-N, list-testimonials-del-N. Publish: publish-button then confirm-ok. Force the language with localStorage nsw_lang='ta' and the mode with nsw_mode. Retest the header: at 1920 TA, header-cta height must be <= 72 and .nav-link heights equal. At 390, the header .wrap scrollWidth must be <= 390 in both languages."
+}
