@@ -1,56 +1,45 @@
-import { useEffect } from "react";
+import { lazy, Suspense } from "react";
 import "@/App.css";
+import "@/admin.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
-import { HOME } from "@/constants/testIds";
+import { SignIn, SignUp } from "@clerk/react";
+import { Toaster } from "@/components/ui/sonner";
+import ClerkAuthProvider from "@/components/auth/ClerkAuthProvider";
+import { PublicSite, PreviewSite } from "@/site/Pages";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+const AdminApp = lazy(() => import("@/admin/AdminApp"));
 
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
+function AuthPage({ children }) {
   return (
-    // The marker attribute below lets the platform probe detect the stock splash — remove it with this page
-    <div data-emergent-splash>
-      <header className="App-header">
-        <a
-          data-testid={HOME.emergentLink}
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
+    <div className="admin-root min-h-screen grid lg:grid-cols-2">
+      <div className="hidden lg:flex flex-col justify-between p-12 auth-side">
+        <div className="flex items-center gap-3"><span className="w-10 h-10 rounded-xl bg-primary text-primary-foreground font-heading font-extrabold flex items-center justify-center">N</span><span className="font-heading">The Nilgiris Softwares</span></div>
+        <div><p className="text-xs uppercase tracking-[0.2em] text-primary">Super Admin</p><h1 className="font-heading text-5xl mt-4 leading-tight">Run your entire website from one place.</h1>
+          <p className="text-muted-foreground mt-4 max-w-md">Pages, themes, projects, leads and AI — draft, preview, publish and roll back without touching code.</p></div>
+        <p className="text-sm text-muted-foreground">Made with ❤️ in the Queen of Hills, for the 🌍</p>
+      </div>
+      <div className="flex items-center justify-center p-4" data-testid="auth-page">{children}</div>
     </div>
   );
-};
+}
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <ClerkAuthProvider>
+        <Suspense fallback={<div className="min-h-screen" style={{ background: "#080D12" }} />}>
+          <Routes>
+            <Route path="/admin/login/*" element={<AuthPage><SignIn routing="path" path="/admin/login" signUpUrl="/sign-up" withSignUp /></AuthPage>} />
+            <Route path="/sign-in/*" element={<AuthPage><SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" withSignUp /></AuthPage>} />
+            <Route path="/sign-up/*" element={<AuthPage><SignUp routing="path" path="/sign-up" signInUrl="/admin/login" /></AuthPage>} />
+            <Route path="/admin/*" element={<AdminApp />} />
+            <Route path="/preview/*" element={<PreviewSite />} />
+            <Route path="*" element={<PublicSite />} />
+          </Routes>
+        </Suspense>
+      </ClerkAuthProvider>
+      <Toaster richColors position="top-right" />
+    </BrowserRouter>
   );
 }
 
